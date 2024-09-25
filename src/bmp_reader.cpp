@@ -1,11 +1,14 @@
-#include "console_bmp/dib_headers/header_base.hpp"
 #include <console_bmp/bmp_reader.hpp>
 
 #include <cstddef>
+#include <cstdint>
 #include <cstring>
 #include <format>
+#include <limits>
 #include <memory>
 
+#include <console_bmp/print.hpp>
+#include <console_bmp/dib_headers/header_base.hpp>
 #include <console_bmp/dib_headers/os21x.hpp>
 #include <console_bmp/dib_headers/os22x.hpp>
 #include <console_bmp/dib_headers/win_core.hpp>
@@ -25,13 +28,38 @@ void BmpReader::add_header_parser(std::unique_ptr<dib_headers::HeaderParser>&& p
     headers_parsers.push_back(std::move(ptr));
 }
 
+struct PaletteEntry {
+    uint32_t r, g, b, a;
+};
+
+template<typename T>
+static T pop_front_array(T* array, size_t size, size_t bits_to_pop) {
+    if (size == 0)
+        return 0;
+
+    T bitmask = std::numeric_limits<T>::max() >> (32 - bits_to_pop);
+
+    T return_value = array[0] & bitmask;
+
+    for (size_t i = 0; i < size - 1; i++) {
+        array[i] <<= bits_to_pop;
+        array[i] |= (array[i + 1] & bitmask) << (32 - bits_to_pop);
+    }
+    array[size - 1] <<= bits_to_pop;
+
+    return return_value;
+    
+}
 
 auto BmpReader::read_bmp(std::istream& is) -> std::unique_ptr<Bmp> {
+    // Read file header
     BmpFileInfo info = read_bmp_file_header(is);
 
+    // Read DIB header size
     uint32_t dib_header_size = 0;
     is.read(reinterpret_cast<char*>(&dib_header_size), sizeof(dib_header_size));
 
+    // Read DIB header
     std::unique_ptr<dib_headers::HeaderBase> header;
     bool is_init = false;
 
@@ -53,6 +81,40 @@ auto BmpReader::read_bmp(std::istream& is) -> std::unique_ptr<Bmp> {
             )
         );
     }
+
+    // Read bitmasks
+    println("There are {} bitmasks", header->bitmasks_count());
+    std::vector<uint32_t> bitmasks(header->bitmasks_count());
+    for (uint32_t& bitmask : bitmasks)
+        is.read(reinterpret_cast<char*>(&bitmask), sizeof(bitmask));
+
+    // Read palette
+    println("Bits per pixel: {}", header->bits_per_pixel());
+    println("Palette has {} entires", header->palette_size());
+
+    std::vector<PaletteEntry> rgba_palette(header->palette_size());
+    size_t bits_palette = header->palette_bits_per_channel();
+    size_t num_channels = header->palette_num_channels();
+    size_t palette_entry_size = (bits_palette * num_channels) / 8;
+
+    for (PaletteEntry& entry : rgba_palette) {
+        uint32_t buffer[4];
+        is.read(reinterpret_cast<char*>(buffer), palette_entry_size);
+
+        if (num_channels >= 1)
+            entry.b = pop_front_array<uint32_t>(buffer, sizeof(buffer)/sizeof(buffer[0]), bits_palette);
+
+        if (num_channels >= 2)
+            entry.g = pop_front_array<uint32_t>(buffer, sizeof(buffer)/sizeof(buffer[0]), bits_palette);
+        
+        if (num_channels >= 1)
+            entry.r = pop_front_array<uint32_t>(buffer, sizeof(buffer)/sizeof(buffer[0]), bits_palette);
+
+        if (num_channels >= 1)
+            entry.a = pop_front_array<uint32_t>(buffer, sizeof(buffer)/sizeof(buffer[0]), bits_palette);
+    }
+
+    // Read the image itself
 
     return nullptr;
 }

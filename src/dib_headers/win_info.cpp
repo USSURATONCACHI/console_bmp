@@ -57,6 +57,8 @@ auto WinInfoParser::parse_win_info(std::istream& is) -> dib_headers::WinInfo {
     is.read(reinterpret_cast<char*>(&header.num_colors_in_pallete), sizeof(header.num_colors_in_pallete));
     is.read(reinterpret_cast<char*>(&header.num_important_colors), sizeof(header.num_important_colors));
 
+    println("Important: {}, total colors: {}", header.num_important_colors, header.num_colors_in_pallete);
+
     check_errors(header);
 
     return header;
