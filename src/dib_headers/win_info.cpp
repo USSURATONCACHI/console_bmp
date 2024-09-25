@@ -34,7 +34,14 @@ auto WinInfoParser::is_valid_header(BmpFileType, size_t header_size) -> bool {
     return header_size == WinInfo::IN_FILE_SIZE;
 }
 
+static void check_errors(WinInfo header);
+
 auto WinInfoParser::parse(std::istream& is) -> std::unique_ptr<dib_headers::HeaderBase> {
+    return std::make_unique<WinInfo>(parse_win_info(is));
+}
+
+
+auto WinInfoParser::parse_win_info(std::istream& is) -> dib_headers::WinInfo {
     println("Parsing with: {}", __PRETTY_FUNCTION__);
 
     WinInfo header;
@@ -50,6 +57,13 @@ auto WinInfoParser::parse(std::istream& is) -> std::unique_ptr<dib_headers::Head
     is.read(reinterpret_cast<char*>(&header.num_colors_in_pallete), sizeof(header.num_colors_in_pallete));
     is.read(reinterpret_cast<char*>(&header.num_important_colors), sizeof(header.num_important_colors));
 
+    check_errors(header);
+
+    return header;
+}
+
+
+static void check_errors(WinInfo header) {
     if (header.num_color_planes != 1) {
         throw InvalidHeaderException(
             std::format(
@@ -85,8 +99,6 @@ auto WinInfoParser::parse(std::istream& is) -> std::unique_ptr<dib_headers::Head
             )
         );
     }
-
-    return std::make_unique<WinInfo>(header);
 }
 
 } // namespace dib_headers

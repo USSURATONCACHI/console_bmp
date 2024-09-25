@@ -55,6 +55,8 @@ struct WinInfoParser : public HeaderParser {
     virtual ~WinInfoParser();
     virtual auto is_valid_header(BmpFileType type, size_t header_size) -> bool;
     virtual auto parse(std::istream& is) -> std::unique_ptr<dib_headers::HeaderBase>;
+    
+    virtual auto parse_win_info(std::istream& is) -> dib_headers::WinInfo;
 };
 
 
