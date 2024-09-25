@@ -77,3 +77,15 @@ TEST(BitView, ShiftedWrite) {
     EXPECT_EQ(view.read_as<uint16_t>(12), static_cast<uint16_t>(0xCBA9));
     EXPECT_EQ(data, 0x01234567'8CBA9DEF);
 }
+
+
+TEST(BitView, ShiftedWrite2) {
+    uint64_t data = 0x0123456789ABCDEF;
+    
+    BitView view { .data_ptr = reinterpret_cast<uint8_t*>(&data), .bits_offset = 0 };
+
+    view.write_as(27, static_cast<uint16_t>(0xCBA9));
+
+    EXPECT_EQ(view.read_as<uint16_t>(27), static_cast<uint16_t>(0xCBA9));
+    EXPECT_EQ(data, 0x123465D49ABCDEF);
+}
