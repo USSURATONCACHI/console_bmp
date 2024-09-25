@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <istream>
 #include <memory>
+#include <stdexcept>
 #include <typeinfo>
 
 #include <console_bmp/dib_headers/header_base.hpp>
@@ -10,6 +11,8 @@
 
 namespace console_bmp {
 namespace dib_headers {
+
+struct InvalidHeaderException : public std::runtime_error { using std::runtime_error::runtime_error; };
 
 struct HeaderParser {
     virtual ~HeaderParser() {}

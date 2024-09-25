@@ -28,6 +28,8 @@ enum class CompressionMethod : uint32_t {
     CMYKRLE4 = 13,
 };
 
+auto CompressionMethod_to_string(CompressionMethod c) -> const char*;
+
 // BITMAPINFOHEADER
 struct WinInfo : public HeaderBase {
     // size of this header, 4 bytes

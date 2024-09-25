@@ -19,8 +19,8 @@ struct WinCore : public HeaderBase {
     // size of this header, 4 bytes
     int16_t width_pixels;
     int16_t height_pixels;
-    int16_t num_color_planes; // must be 1 ?
-    int16_t num_bits_per_pixel;
+    uint16_t num_color_planes; // must be 1 ?
+    uint16_t num_bits_per_pixel;
 
     virtual const std::type_info& type() const { return typeid(WinCore); }
 
