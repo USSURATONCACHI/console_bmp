@@ -27,11 +27,13 @@ static void write_uint_shifted(T* write_to, size_t bit_offset, T data) {
     size_t byte_offset = bit_offset / 8;
     bit_offset = bit_offset % 8;
 
-    write_to[byte_offset] &= std::numeric_limits<T>::max() << bit_offset;
+    write_to[byte_offset] &= ~(std::numeric_limits<T>::max() << bit_offset);
     write_to[byte_offset] |= data << bit_offset;
 
-    if (bit_offset != 0)
+    if (bit_offset != 0) {
+        write_to[byte_offset + 1] &= ~(std::numeric_limits<T>::max() >> ((sizeof(T) * 8) - bit_offset));
         write_to[byte_offset + 1] |= data >> ((sizeof(T) * 8) - bit_offset);
+    }
 }
 
 void BitView::read_into(size_t size_bits, size_t offset_bits, void* out_data) const{
