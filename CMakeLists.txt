@@ -11,6 +11,7 @@ add_executable(drawBmp
     src/main.cpp
     src/bmp_reader.cpp
     src/bmp_file_info.cpp
+    src/palette_view.cpp
 
     src/dib_headers/os21x.cpp
     src/dib_headers/os22x.cpp
