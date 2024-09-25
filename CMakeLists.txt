@@ -4,7 +4,7 @@ project(console_bmp VERSION 0.1.0 LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # For VSCode clang extension integraion
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -ggdb")
 
 include(FetchContent)
 FetchContent_Declare(
@@ -16,32 +16,32 @@ FetchContent_MakeAvailable(googletest)
 
 
 
-add_library(bmp_parse
-    src/bmp_parse/bmp_reader.cpp
-    src/bmp_parse/bmp_file_info.cpp
-    src/bmp_parse/palette_view.cpp
-    src/bmp_parse/bit_view.cpp
-    src/bmp_parse/dib_headers/os21x.cpp
-    src/bmp_parse/dib_headers/os22x.cpp
-    src/bmp_parse/dib_headers/win_core.cpp
-    src/bmp_parse/dib_headers/win_info.cpp
+add_library(console_bmp STATIC
+    src/console_bmp/bmp_reader.cpp
+    src/console_bmp/bmp_file_info.cpp
+    src/console_bmp/palette_view.cpp
+    src/console_bmp/bit_view.cpp
+    src/console_bmp/dib_headers/os21x.cpp
+    src/console_bmp/dib_headers/os22x.cpp
+    src/console_bmp/dib_headers/win_core.cpp
+    src/console_bmp/dib_headers/win_info.cpp
 )
-target_include_directories(bmp_parse PUBLIC "include/")
+target_include_directories(console_bmp PUBLIC "include/")
 
 
 add_executable(drawBmp
     src/main.cpp
 )
 target_include_directories(drawBmp PUBLIC "include/")
-target_link_libraries(drawBmp PUBLIC bmp_parse)
+target_link_libraries(drawBmp PUBLIC console_bmp)
 
 
 enable_testing()
 
 add_executable(run_test
-    src/test/test.cpp
+    src/test/bit_view.cpp
 )
-target_link_libraries(run_test GTest::gtest_main bmp_parse)
+target_link_libraries(run_test GTest::gtest_main console_bmp)
 
 include(GoogleTest)
 gtest_discover_tests(run_test)

@@ -41,7 +41,7 @@ void BitView::read_into(size_t size_bits, size_t offset_bits, void* out_data) co
 
     size_t i = 0;
     uint8_t *write_ptr = reinterpret_cast<uint8_t*>(out_data);
-    while (size_bits > 8) {
+    while (size_bits >= 8) {
         write_ptr[i] = read_uint_shifted<uint8_t>(&data_ptr[pos_bytes + i], rem_bits);
         size_bits -= 8;
         i++;
@@ -58,7 +58,7 @@ void BitView::write_from(size_t size_bits, size_t offset_bits, const void* in_da
 
     size_t i = 0;
     const uint8_t *read_ptr = reinterpret_cast<const uint8_t*>(in_data);
-    while (size_bits > 8) {
+    while (size_bits >= 8) {
         write_uint_shifted(&data_ptr[pos_bytes + i], rem_bits, read_ptr[i]);
         size_bits -= 8;
         i++;
