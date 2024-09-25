@@ -3,23 +3,25 @@
 #include <cstdint>
 #include <vector>
 
+#include <console_bmp/bit_view.hpp>
+
 namespace console_bmp {
 
 struct Rgba8Pixel {
     uint8_t b, g, r, a;
 };
 
-struct PalettePixelView {
-    uint8_t* data_ptr;
-    uint8_t bits_offset;
+struct PalettePixelView : public BitView {
 
 
-    void get_channel(size_t channel, size_t channel_bits, void* out_data) const;
+    inline void get_channel(size_t channel_number, size_t channel_bits, void* out_data) const {
+        read_into(channel_bits, channel_number * channel_bits, out_data);
+    }
 
     template<typename As>
-    inline auto get_channel_as(size_t channel, size_t channel_bits) const -> As {
+    inline auto get_channel_as(size_t channel_number, size_t channel_bits) const -> As {
         As as;
-        get_channel(channel, channel_bits, reinterpret_cast<void*>(&as));
+        get_channel(channel_number, channel_bits, reinterpret_cast<void*>(&as));
         return as;
     }
 
