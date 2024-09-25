@@ -100,6 +100,7 @@ auto BmpReader::read_bmp(std::istream& is) -> std::unique_ptr<Bmp> {
     PaletteView view(std::move(palette_data), num_channels, bits_palette);
 
     // Read the image itself
+    println("Image size: {} x {}", header->image_width(), header->image_height());
     size_t row_size = ((header->bits_per_pixel() * std::abs(header->image_width()) + 31) / 32) * 4;
     size_t pixel_array_size = row_size * std::abs(header->image_height());
 
