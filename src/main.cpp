@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 #include <string>
 #include <filesystem>
 #include <fstream>
@@ -27,8 +28,7 @@ int main(int argc, char** argv) {
     std::ifstream ifs(bmp_filepath, std::ios::in | std::ios::binary);
 
     BmpReader reader;
-    Bmp* image = reader.read_bmp(ifs);
-    delete image;
+    std::unique_ptr<Bmp> image = reader.read_bmp(ifs);
 
     return 0;
 }
