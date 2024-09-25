@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <cstring>
+#include <format>
 #include <memory>
 
 #include <console_bmp/dib_headers/os21x.hpp>
@@ -44,7 +45,13 @@ auto BmpReader::read_bmp(std::istream& is) -> std::unique_ptr<Bmp> {
     }
 
     if (!is_init) {
-        throw UnsupportedBmpKindException("Did not find suitable parser");
+        throw UnsupportedBmpKindException(
+            std::format(
+                "Did not find suitable parser (header size: {}, type: {})",
+                dib_header_size,
+                BmpFileType_to_string(info.file_type)
+            )
+        );
     }
 
     return nullptr;

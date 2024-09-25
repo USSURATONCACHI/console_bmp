@@ -23,7 +23,8 @@ struct OS21X : public HeaderBase {
     virtual const std::type_info& type() const { return typeid(OS21X); }
 
     static const size_t IN_FILE_SIZE = 12;
-    virtual size_t in_file_size() const        { return IN_FILE_SIZE; }
+    virtual size_t in_file_size() const { return IN_FILE_SIZE; }
+    virtual size_t bitmasks_count() const { return 0; } 
 };
 
 struct OS21X_Parser : public HeaderParser {

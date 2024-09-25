@@ -47,7 +47,14 @@ struct WinInfo : public HeaderBase {
     virtual const std::type_info& type() const { return typeid(WinInfo); }
 
     static const size_t IN_FILE_SIZE = 40;
-    virtual size_t in_file_size() const        { return IN_FILE_SIZE; }
+    virtual size_t in_file_size() const { return IN_FILE_SIZE; }
+    virtual size_t bitmasks_count() const { 
+        switch (compression_method) {
+            case CompressionMethod::ALPHABITFIELDS: return 4;
+            case CompressionMethod::BITFIELDS:      return 3;
+            default: return 0;
+        }
+    }
 };
 
 struct WinInfoParser : public HeaderParser {

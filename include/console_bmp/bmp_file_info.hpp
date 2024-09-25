@@ -15,6 +15,7 @@ enum class BmpFileType {
 };
 
 bool BmpFileType_is_OS2(BmpFileType t);
+const char* BmpFileType_to_string(BmpFileType t);
 
 struct BmpFileInfo {
     BmpFileType file_type;
