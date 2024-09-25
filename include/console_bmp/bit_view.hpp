@@ -14,7 +14,7 @@ struct BitView {
 
     template<typename As>
     inline auto read_as(size_t offset_bits, size_t max_bits = sizeof(As) * 8) const -> As {
-        As as = 0;
+        As as = {};
         read_into(max_bits, offset_bits, reinterpret_cast<void*>(&as));
         return as;
     }
