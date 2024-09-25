@@ -7,10 +7,6 @@
 
 namespace console_bmp {
 
-struct Rgba8Pixel {
-    uint8_t b, g, r, a;
-};
-
 struct PalettePixelView : public BitView {
 
 
