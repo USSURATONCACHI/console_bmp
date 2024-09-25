@@ -37,7 +37,9 @@ struct Win_Info : public HeaderBase {
     uint32_t num_important_colors;
 
     virtual const std::type_info& type() const { return typeid(Win_Info); }
-    virtual size_t in_file_size() const        { return 40; }
+
+    static const size_t IN_FILE_SIZE = 40;
+    virtual size_t in_file_size() const        { return IN_FILE_SIZE; }
 };
 
 

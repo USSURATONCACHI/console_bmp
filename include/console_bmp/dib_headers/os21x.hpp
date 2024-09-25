@@ -17,7 +17,9 @@ struct OS21X : public HeaderBase {
     uint16_t num_bits_per_pixel;
 
     virtual const std::type_info& type() const { return typeid(OS21X); }
-    virtual size_t in_file_size() const        { return 12; }
+
+    static const size_t IN_FILE_SIZE = 12;
+    virtual size_t in_file_size() const        { return IN_FILE_SIZE; }
 };
 
 

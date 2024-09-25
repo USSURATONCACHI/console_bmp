@@ -23,7 +23,9 @@ struct OS22X : public Win_Info {
     uint32_t halftoning_param_2;
 
     virtual const std::type_info& type() const { return typeid(OS22X); }
-    virtual size_t in_file_size() const        { return 64; }
+    
+    static const size_t IN_FILE_SIZE = 64;
+    virtual size_t in_file_size() const        { return IN_FILE_SIZE; }
 };
 
 
