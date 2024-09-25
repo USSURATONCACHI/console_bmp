@@ -9,6 +9,7 @@
 #include <memory>
 
 #include <console_bmp/print.hpp>
+#include <console_bmp/palette_view.hpp>
 #include <console_bmp/dib_headers/header_base.hpp>
 #include <console_bmp/dib_headers/os21x.hpp>
 #include <console_bmp/dib_headers/os22x.hpp>
@@ -28,10 +29,6 @@ BmpReader::~BmpReader() {}
 void BmpReader::add_header_parser(std::unique_ptr<dib_headers::HeaderParser>&& ptr) {
     headers_parsers.push_back(std::move(ptr));
 }
-
-struct PaletteEntry {
-    uint32_t r, g, b, a;
-};
 
 template<typename T>
 static T pop_front_array(T* array, size_t size, size_t bits_to_pop) {
@@ -91,35 +88,21 @@ auto BmpReader::read_bmp(std::istream& is) -> std::unique_ptr<Bmp> {
 
     // Read palette
     println("Bits per pixel: {}", header->bits_per_pixel());
-    println("Palette has {} entires", header->palette_size());
+    println("Palette has {} entires", header->palette_num_entries());
 
-    std::vector<PaletteEntry> rgba_palette(header->palette_size());
     size_t bits_palette = header->palette_bits_per_channel();
     size_t num_channels = header->palette_num_channels();
-    size_t palette_entry_size = (bits_palette * num_channels) / 8;
+    size_t palette_size = (bits_palette * num_channels * header->palette_num_entries()) / 8;
 
-    for (PaletteEntry& entry : rgba_palette) {
-        uint32_t buffer[4];
-        is.read(reinterpret_cast<char*>(buffer), palette_entry_size);
+    std::vector<uint8_t> palette_data(palette_size);
+    is.read(reinterpret_cast<char*>(palette_data.data()), palette_size);
 
-        if (num_channels >= 1)
-            entry.b = pop_front_array<uint32_t>(buffer, sizeof(buffer)/sizeof(buffer[0]), bits_palette);
-
-        if (num_channels >= 2)
-            entry.g = pop_front_array<uint32_t>(buffer, sizeof(buffer)/sizeof(buffer[0]), bits_palette);
-        
-        if (num_channels >= 1)
-            entry.r = pop_front_array<uint32_t>(buffer, sizeof(buffer)/sizeof(buffer[0]), bits_palette);
-
-        if (num_channels >= 1)
-            entry.a = pop_front_array<uint32_t>(buffer, sizeof(buffer)/sizeof(buffer[0]), bits_palette);
-    }
+    PaletteView view(std::move(palette_data), num_channels, bits_palette);
 
     // Read the image itself
-    
     size_t row_size = ((header->bits_per_pixel() * std::abs(header->image_width()) + 31) / 32) * 4;
     size_t pixel_array_size = row_size * std::abs(header->image_height());
-    
+
 
     return nullptr;
 }

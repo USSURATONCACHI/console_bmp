@@ -26,8 +26,8 @@ struct OS21X : public HeaderBase {
     virtual size_t in_file_size() const   { return IN_FILE_SIZE; }
     virtual size_t bitmasks_count() const { return 0; } 
     virtual size_t bits_per_pixel() const { return static_cast<size_t>(num_bits_per_pixel); }
-    virtual size_t palette_size() const   { return 1 << bits_per_pixel(); }
 
+    virtual size_t palette_num_entries() const   { return 1 << bits_per_pixel(); }
     virtual size_t palette_num_channels() const     { return 3; }
     virtual size_t palette_bits_per_channel() const { return 8; }
 

@@ -56,8 +56,8 @@ struct WinInfo : public HeaderBase {
         }
     }
     virtual size_t bits_per_pixel() const { return static_cast<size_t>(num_bits_per_pixel); }
-    virtual size_t palette_size() const   { return static_cast<size_t>(num_colors_in_pallete); }
 
+    virtual size_t palette_num_entries() const      { return static_cast<size_t>(num_colors_in_pallete); }
     virtual size_t palette_num_channels() const     { return 4; }
     virtual size_t palette_bits_per_channel() const { return 8; }
     virtual ssize_t image_width() const  { return static_cast<ssize_t>(width_pixels); }
