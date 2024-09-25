@@ -3,7 +3,11 @@
 #include <cstdint>
 #include <cstddef>
 #include <typeinfo>
+#include <memory>
+#include <istream>
+
 #include <console_bmp/dib_headers/header_base.hpp>
+#include <console_bmp/dib_headers/header_parser.hpp>
 
 namespace console_bmp {
 namespace dib_headers {
@@ -22,6 +26,12 @@ struct OS21X : public HeaderBase {
     virtual size_t in_file_size() const        { return IN_FILE_SIZE; }
 };
 
+struct OS21X_Parser : public HeaderParser {
+    OS21X_Parser();
+    virtual ~OS21X_Parser();
+    virtual auto is_valid_header(BmpFileType type, size_t header_size) -> bool;
+    virtual auto parse(std::istream& is) -> std::unique_ptr<dib_headers::HeaderBase>;
+};
 
 } // namespace dib_headers
 } // namespace console_bmp

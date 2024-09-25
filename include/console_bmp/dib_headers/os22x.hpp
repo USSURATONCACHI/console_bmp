@@ -1,7 +1,12 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
+#include <istream>
+
+#include <console_bmp/bmp_file_info.hpp>
 #include <console_bmp/dib_headers/header_base.hpp>
+#include <console_bmp/dib_headers/header_parser.hpp>
 #include <console_bmp/dib_headers/win_info.hpp>
 
 namespace console_bmp {
@@ -17,7 +22,7 @@ enum class HalftoningAlg : uint16_t {
 };
 
 // OS22XBITMAPHEADER
-struct OS22X : public Win_Info {
+struct OS22X : public WinInfo {
     HalftoningAlg halftoning_alg;
     uint32_t halftoning_param_1; 
     uint32_t halftoning_param_2;
@@ -28,6 +33,13 @@ struct OS22X : public Win_Info {
     virtual size_t in_file_size() const        { return IN_FILE_SIZE; }
 };
 
+
+struct OS22X_Parser : public HeaderParser {
+    OS22X_Parser();
+    virtual ~OS22X_Parser();
+    virtual auto is_valid_header(BmpFileType type, size_t header_size) -> bool;
+    virtual auto parse(std::istream& is) -> std::unique_ptr<dib_headers::HeaderBase>;
+};
 
 } // namespace dib_headers
 } // namespace console_bmp

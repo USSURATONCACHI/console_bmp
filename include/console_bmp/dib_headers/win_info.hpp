@@ -3,7 +3,13 @@
 #include <cstdint>
 #include <cstddef>
 #include <typeinfo>
+#include <typeinfo>
+#include <memory>
+#include <istream>
+
+#include <console_bmp/bmp_file_info.hpp>
 #include <console_bmp/dib_headers/header_base.hpp>
+#include <console_bmp/dib_headers/header_parser.hpp>
 
 namespace console_bmp {
 namespace dib_headers {
@@ -23,7 +29,7 @@ enum class CompressionMethod : uint32_t {
 };
 
 // BITMAPINFOHEADER
-struct Win_Info : public HeaderBase {
+struct WinInfo : public HeaderBase {
     // size of this header, 4 bytes
     int32_t width_pixels;
     int32_t height_pixels;
@@ -36,10 +42,17 @@ struct Win_Info : public HeaderBase {
     uint32_t num_colors_in_pallete;
     uint32_t num_important_colors;
 
-    virtual const std::type_info& type() const { return typeid(Win_Info); }
+    virtual const std::type_info& type() const { return typeid(WinInfo); }
 
     static const size_t IN_FILE_SIZE = 40;
     virtual size_t in_file_size() const        { return IN_FILE_SIZE; }
+};
+
+struct WinInfoParser : public HeaderParser {
+    WinInfoParser();
+    virtual ~WinInfoParser();
+    virtual auto is_valid_header(BmpFileType type, size_t header_size) -> bool;
+    virtual auto parse(std::istream& is) -> std::unique_ptr<dib_headers::HeaderBase>;
 };
 
 
