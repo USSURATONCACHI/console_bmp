@@ -9,5 +9,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 
 add_executable(drawBmp
     src/main.cpp
+    src/bmp_reader.cpp
+    src/bmp_file_info.cpp
 )
 target_include_directories(drawBmp PUBLIC "include/")
