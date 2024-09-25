@@ -32,6 +32,8 @@ struct WinCore : public HeaderBase {
 
     virtual size_t palette_num_channels() const     { return 4; }
     virtual size_t palette_bits_per_channel() const { return 8; }
+    virtual ssize_t image_width() const  { return static_cast<ssize_t>(width_pixels); }
+    virtual ssize_t image_height() const { return static_cast<ssize_t>(height_pixels); }
 };
 
 struct WinCoreParser : public HeaderParser {

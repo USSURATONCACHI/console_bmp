@@ -2,11 +2,15 @@
 
 #include <cstddef>
 #include <typeinfo>
+#include <iterator>
 
 namespace console_bmp {
 namespace dib_headers {
 
 struct HeaderBase {
+    virtual ssize_t image_width() const = 0;
+    virtual ssize_t image_height() const = 0;
+
     virtual const std::type_info& type() const = 0;
     virtual size_t in_file_size() const = 0;
 

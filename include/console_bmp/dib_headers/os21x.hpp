@@ -27,9 +27,12 @@ struct OS21X : public HeaderBase {
     virtual size_t bitmasks_count() const { return 0; } 
     virtual size_t bits_per_pixel() const { return static_cast<size_t>(num_bits_per_pixel); }
     virtual size_t palette_size() const   { return 1 << bits_per_pixel(); }
-    
+
     virtual size_t palette_num_channels() const     { return 3; }
     virtual size_t palette_bits_per_channel() const { return 8; }
+
+    virtual ssize_t image_width() const  { return static_cast<ssize_t>(width_pixels); }
+    virtual ssize_t image_height() const { return static_cast<ssize_t>(height_pixels); }
 };
 
 struct OS21X_Parser : public HeaderParser {

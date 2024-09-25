@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <cstdlib>
 #include <cstring>
 #include <format>
 #include <limits>
@@ -115,6 +116,10 @@ auto BmpReader::read_bmp(std::istream& is) -> std::unique_ptr<Bmp> {
     }
 
     // Read the image itself
+    
+    size_t row_size = ((header->bits_per_pixel() * std::abs(header->image_width()) + 31) / 32) * 4;
+    size_t pixel_array_size = row_size * std::abs(header->image_height());
+    
 
     return nullptr;
 }
