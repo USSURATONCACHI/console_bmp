@@ -1,3 +1,4 @@
+#include "console_bmp/pixel_array_view.hpp"
 #include <console_bmp/bmp_reader.hpp>
 
 #include <cstddef>
@@ -105,6 +106,13 @@ auto BmpReader::read_bmp(std::istream& is) -> std::unique_ptr<Bmp> {
     size_t pixel_array_size = row_size * std::abs(header->image_height());
     println("Pixel array size: {}", pixel_array_size);
 
+    std::vector<uint8_t> pixel_array(pixel_array_size);
+    is.seekg(info.pixel_array_offset);
+    is.read(reinterpret_cast<char*>(pixel_array.data()), pixel_array_size);
+
+    PixelArrayView pixel_array_view(std::move(pixel_array), header->image_width(), header->bits_per_pixel());
+
+    
 
     return nullptr;
 }

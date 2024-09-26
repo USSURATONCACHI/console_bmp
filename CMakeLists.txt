@@ -21,6 +21,7 @@ add_library(console_bmp STATIC
     src/console_bmp/bmp_file_info.cpp
     src/console_bmp/palette_view.cpp
     src/console_bmp/bit_view.cpp
+    src/console_bmp/pixel_array_view.cpp
     src/console_bmp/dib_headers/os21x.cpp
     src/console_bmp/dib_headers/os22x.cpp
     src/console_bmp/dib_headers/win_core.cpp
