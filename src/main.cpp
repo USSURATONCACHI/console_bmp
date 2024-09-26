@@ -9,7 +9,7 @@
 #include <console_bmp/bmp_reader.hpp>
 
 using console_bmp::println;
-using console_bmp::Bmp;
+using console_bmp::Image;
 using console_bmp::BmpReader;
 
 
@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
     std::ifstream ifs(bmp_filepath, std::ios::in | std::ios::binary);
 
     BmpReader reader;
-    std::unique_ptr<Bmp> image = reader.read_bmp(ifs);
+    std::unique_ptr<Image> image = reader.read_bmp(ifs);
 
     return 0;
 }

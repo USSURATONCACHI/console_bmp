@@ -1,4 +1,3 @@
-#include "console_bmp/pixel_array_view.hpp"
 #include <console_bmp/bmp_reader.hpp>
 
 #include <cstddef>
@@ -10,12 +9,16 @@
 #include <memory>
 
 #include <console_bmp/print.hpp>
-#include <console_bmp/palette_view.hpp>
+#include <console_bmp/bit_view.hpp>
+
+#include <console_bmp/images/bmp_no_palette.hpp>
+
 #include <console_bmp/dib_headers/header_base.hpp>
 #include <console_bmp/dib_headers/os21x.hpp>
 #include <console_bmp/dib_headers/os22x.hpp>
 #include <console_bmp/dib_headers/win_core.hpp>
 #include <console_bmp/dib_headers/win_info.hpp>
+#include <stdexcept>
 
 namespace console_bmp {
 
@@ -50,7 +53,24 @@ static T pop_front_array(T* array, size_t size, size_t bits_to_pop) {
     
 }
 
-auto BmpReader::read_bmp(std::istream& is) -> std::unique_ptr<Bmp> {
+auto BmpReader::get_appropriate_parser(size_t header_size, BmpFileType type) -> dib_headers::HeaderParser& {
+    for (auto& parser : headers_parsers) {
+        bool is_valid = parser->is_valid_header(type, header_size);
+        if (is_valid) {
+            return *parser;
+        }
+    }
+
+    throw UnsupportedBmpKindException(
+        std::format(
+            "Did not find suitable parser (header size: {}, type: {})",
+            header_size,
+            BmpFileType_to_string(type)
+        )
+    );
+}
+
+auto BmpReader::read_bmp(std::istream& is) -> std::unique_ptr<Image> {
     // Read file header
     BmpFileInfo info = read_bmp_file_header(is);
 
@@ -59,27 +79,8 @@ auto BmpReader::read_bmp(std::istream& is) -> std::unique_ptr<Bmp> {
     is.read(reinterpret_cast<char*>(&dib_header_size), sizeof(dib_header_size));
 
     // Read DIB header
-    std::unique_ptr<dib_headers::HeaderBase> header;
-    bool is_init = false;
-
-    for (auto& parser : headers_parsers) {
-        bool is_valid = parser->is_valid_header(info.file_type, static_cast<size_t>(dib_header_size));
-        if (is_valid) {
-            header = parser->parse(is);
-            is_init = true;
-            break;
-        }
-    }
-
-    if (!is_init) {
-        throw UnsupportedBmpKindException(
-            std::format(
-                "Did not find suitable parser (header size: {}, type: {})",
-                dib_header_size,
-                BmpFileType_to_string(info.file_type)
-            )
-        );
-    }
+    dib_headers::HeaderParser& parser = get_appropriate_parser(static_cast<size_t>(dib_header_size), info.file_type);
+    std::unique_ptr<dib_headers::HeaderBase> header = parser.parse(is);
 
     // Read bitmasks
     println("There are {} bitmasks", header->bitmasks_count());
@@ -88,31 +89,34 @@ auto BmpReader::read_bmp(std::istream& is) -> std::unique_ptr<Bmp> {
         is.read(reinterpret_cast<char*>(&bitmask), sizeof(bitmask));
 
     // Read palette
-    println("Bits per pixel: {}", header->bits_per_pixel());
-    println("Palette has {} entires", header->palette_num_entries());
+    size_t palette_entry_size_bits = header->palette_bits_per_channel() * header->palette_num_channels();
+    size_t palette_size_bits = palette_entry_size_bits * header->palette_num_entries();
+    size_t palette_size_bytes = (palette_size_bits + 7) / 8;
 
-    size_t bits_palette = header->palette_bits_per_channel();
-    size_t num_channels = header->palette_num_channels();
-    size_t palette_size = (bits_palette * num_channels * header->palette_num_entries()) / 8;
-
-    std::vector<uint8_t> palette_data(palette_size);
-    is.read(reinterpret_cast<char*>(palette_data.data()), palette_size);
-
-    PaletteView view(std::move(palette_data), num_channels, bits_palette);
+    std::vector<uint8_t> palette_data(palette_size_bytes);
+    is.read(reinterpret_cast<char*>(palette_data.data()), palette_size_bytes);
 
     // Read the image itself
-    println("Image size: {} x {}", header->image_width(), header->image_height());
     size_t row_size = ((header->bits_per_pixel() * std::abs(header->image_width()) + 31) / 32) * 4;
     size_t pixel_array_size = row_size * std::abs(header->image_height());
-    println("Pixel array size: {}", pixel_array_size);
 
     std::vector<uint8_t> pixel_array(pixel_array_size);
-    is.seekg(info.pixel_array_offset);
     is.read(reinterpret_cast<char*>(pixel_array.data()), pixel_array_size);
 
-    PixelArrayView pixel_array_view(std::move(pixel_array), header->image_width(), header->bits_per_pixel());
+    // Return
+    if (header->palette_num_entries() == 0) {
+        BmpNoPalette palette(
+            std::move(pixel_array),
+            std::abs(header->image_width()),
+            std::abs(header->image_height()),
+            header->palette_num_channels(),
+            header->bits_per_pixel() / header->palette_num_channels()
+        );
 
-    
+        return std::make_unique<BmpNoPalette>(std::move(palette));
+    } else {
+        throw std::runtime_error("Paletted images are not supported yet.");
+    }
 
     return nullptr;
 }

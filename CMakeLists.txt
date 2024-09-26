@@ -19,10 +19,9 @@ FetchContent_MakeAvailable(googletest)
 add_library(console_bmp STATIC
     src/console_bmp/bmp_reader.cpp
     src/console_bmp/bmp_file_info.cpp
-    src/console_bmp/palette_view.cpp
     src/console_bmp/bit_view.cpp
-    src/console_bmp/pixel_array_view.cpp
-    src/console_bmp/bmp_rgb8.cpp
+    
+    src/console_bmp/images/bmp_no_palette.cpp
 
     src/console_bmp/dib_headers/os21x.cpp
     src/console_bmp/dib_headers/os22x.cpp
