@@ -21,7 +21,7 @@ public:
     virtual size_t bits_per_channel() const = 0;
 
     virtual void get_pixel(size_t x, size_t y, void* out_buffer) const = 0;
-    virtual void set_pixel(size_t x, size_t y, void* in_buffer) = 0;
+    virtual void set_pixel(size_t x, size_t y, const void* in_buffer) = 0;
 
     virtual Rgb8Pixel get_pixel_rgb8(size_t x, size_t y) const = 0;
     virtual void set_pixel_rgb8(size_t x, size_t y, Rgb8Pixel pixel) = 0;
