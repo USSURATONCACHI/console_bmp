@@ -1,0 +1,12 @@
+bgra
+bgr24
+rgb565le
+rgb555le
+rgb444le
+rgb8
+bgr8
+rgb4_byte
+bgr4_byte
+gray
+pal8
+monob

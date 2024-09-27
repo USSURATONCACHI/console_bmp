@@ -25,25 +25,24 @@ struct PaletteEntry {
     uint8_t b, g, r, a;
 };
 
+static auto channel_to_8bit(uint64_t channel, size_t bits) -> uint8_t {
+    if (bits < 8) {
+        channel >>= 8 - bits;
+    } else if (bits > 8) {
+        channel <<= bits - 8;
+    }
+    return channel;
+}
+
 static auto read_bgr_pixel(BitView pixel_view, size_t bits_per_channel) -> images::Rgba8Pixel {
     uint64_t b = pixel_view.read_as<uint64_t>(0 * bits_per_channel, bits_per_channel);
     uint64_t g = pixel_view.read_as<uint64_t>(1 * bits_per_channel, bits_per_channel);
     uint64_t r = pixel_view.read_as<uint64_t>(2 * bits_per_channel, bits_per_channel);
 
-    if (bits_per_channel < 8) {
-        r >>= 8 - bits_per_channel;
-        g >>= 8 - bits_per_channel;
-        b >>= 8 - bits_per_channel;
-    } else if (bits_per_channel > 8) {
-        r <<= bits_per_channel - 8;
-        g <<= bits_per_channel - 8;
-        b <<= bits_per_channel - 8;
-    }
-
     return images::Rgba8Pixel {
-        .r = static_cast<uint8_t>(r),
-        .g = static_cast<uint8_t>(g),
-        .b = static_cast<uint8_t>(b),
+        .r = channel_to_8bit(r, bits_per_channel),
+        .g = channel_to_8bit(g, bits_per_channel),
+        .b = channel_to_8bit(b, bits_per_channel),
         .a = 255,
     };
 }
@@ -54,8 +53,14 @@ auto WinInfoReader::read(std::istream& is, dib_headers::WinInfo header, BmpFileI
     }
 
     // Read palette
-    std::vector<PaletteEntry> palette_bgra(header.num_colors_in_pallete);
-    is.read(reinterpret_cast<char*>(palette_bgra.data()), header.num_colors_in_pallete * sizeof(PaletteEntry));
+    size_t palette_size = header.num_colors_in_pallete;
+    if (header.num_bits_per_pixel <= 16 && palette_size == 0) {
+        println("Setting palette size to be 2^{}", header.num_bits_per_pixel);
+        palette_size = 1 << header.num_bits_per_pixel;
+    }
+
+    std::vector<PaletteEntry> palette_bgra(palette_size);
+    is.read(reinterpret_cast<char*>(palette_bgra.data()), palette_size * sizeof(PaletteEntry));
 
     std::vector<images::Rgba8Pixel> palette(palette_bgra.size());
     for (size_t i = 0; i < palette.size(); i++) {
@@ -65,8 +70,9 @@ auto WinInfoReader::read(std::istream& is, dib_headers::WinInfo header, BmpFileI
         // palette[i].a = palette_bgra[i].a;
         palette[i].a = 255;
     }
-    
-    // println("Palette has {} colors", palette.size());
+
+    println("Palette has {} colors", palette.size());
+    // println("Bits per pixel is: {}", header.num_bits_per_pixel);
     // for (images::Rgba8Pixel p : palette) {
     //     println("{} {} {} {}", static_cast<uint64_t>(p.r), static_cast<uint64_t>(p.g), static_cast<uint64_t>(p.b), static_cast<uint64_t>(p.a));
     // }
