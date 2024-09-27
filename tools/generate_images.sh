@@ -32,4 +32,8 @@ for input_file in "${input_files[@]}"; do
 
     palette_output_file="${output_directory}/$(basename "$input_file").pal8.bmp"
     ffmpeg -i "$input_file" -i "$palette_file" -lavfi "paletteuse" -pix_fmt pal8 "$palette_output_file"
+
+    # Generate a binary dump for comparsion
+    dump_file="${output_directory}/$(basename "$input_file").dump"
+    python "$(dirname $0)/convert_to_image_dump.py" $input_file $dump_file
 done
