@@ -19,6 +19,7 @@ const char* BmpFileType_to_string(BmpFileType t);
 
 struct BmpFileInfo {
     BmpFileType file_type;
+    size_t bmp_file_size;
     size_t pixel_array_offset;
 };
 

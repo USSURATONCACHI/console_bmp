@@ -9,7 +9,7 @@
 #include <console_bmp/bmp_reader.hpp>
 
 using console_bmp::println;
-using console_bmp::Image;
+using console_bmp::images::Image;
 using console_bmp::BmpReader;
 
 

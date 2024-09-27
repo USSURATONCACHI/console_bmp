@@ -1,3 +1,4 @@
+#include "console_bmp/images/rgba8.hpp"
 #include <console_bmp/bmp_reader.hpp>
 
 #include <cstddef>
@@ -11,8 +12,6 @@
 
 #include <console_bmp/print.hpp>
 #include <console_bmp/bit_view.hpp>
-
-#include <console_bmp/images/bmp_no_palette.hpp>
 
 #include <console_bmp/dib_headers/header_base.hpp>
 #include <console_bmp/dib_headers/os21x.hpp>
@@ -72,7 +71,7 @@ auto BmpReader::get_appropriate_parser(size_t header_size, BmpFileType type) -> 
     );
 }
 
-auto BmpReader::read_bmp(std::istream& is) -> std::unique_ptr<Image> {
+auto BmpReader::read_bmp(std::istream& is) -> std::unique_ptr<images::Image> {
     // Read file header
     BmpFileInfo info = read_bmp_file_header(is);
 
@@ -88,10 +87,8 @@ auto BmpReader::read_bmp(std::istream& is) -> std::unique_ptr<Image> {
         dib_headers::WinInfo& header_downcast = *dynamic_cast<dib_headers::WinInfo*>(header.get());
         readers::WinInfoReader reader;
 
-        reader.read(is, header_downcast);
-
-        throw std::runtime_error("Unimplemented");
-        return nullptr;
+        images::Rgba8 image = reader.read(is, header_downcast, info);
+        return std::make_unique<images::Rgba8>(std::move(image));
     } else {
         throw std::runtime_error("Unsupported BMP image kind: " + std::string(header->type().name()));
         return nullptr;
@@ -139,14 +136,16 @@ auto BmpReader::read_bmp(std::istream& is) -> std::unique_ptr<Image> {
 auto BmpReader::read_bmp_file_header(std::istream& is) -> BmpFileInfo {
     char file_type[2];
     uint32_t pix_array_offset;
+    uint32_t bmp_file_size;
     
     is.read(file_type, 2);
-    is.ignore(4); // file size in bytes, 4 bytes long
+    is.read(reinterpret_cast<char*>(&bmp_file_size), 4);
     is.ignore(4); // reserved 4 bytes
-    is.read((char*)&pix_array_offset, 4);
+    is.read(reinterpret_cast<char*>(&pix_array_offset), 4);
 
     BmpFileInfo info;
     info.pixel_array_offset = static_cast<size_t>(pix_array_offset);
+    info.bmp_file_size = bmp_file_size;
 
     if (std::memcmp(file_type, "BM", 2) == 0)      info.file_type = BmpFileType::WIN_BM;
     else if (std::memcmp(file_type, "BA", 2) == 0) info.file_type = BmpFileType::OS2_BA;
