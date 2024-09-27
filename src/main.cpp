@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -7,9 +8,11 @@
 
 #include <console_bmp/print.hpp>
 #include <console_bmp/bmp_reader.hpp>
+#include <console_bmp/images/image.hpp>
 
 using console_bmp::println;
 using console_bmp::images::Image;
+using console_bmp::images::Rgba8Pixel;
 using console_bmp::BmpReader;
 
 
@@ -26,9 +29,30 @@ int main(int argc, char** argv) {
     println("Filepath: {}", std::string(bmp_filepath));
 
     std::ifstream ifs(bmp_filepath, std::ios::in | std::ios::binary);
+    if (!ifs.is_open()) {
+        println("Failed to open the file.");
+        return 2;
+    }
 
     BmpReader reader;
     std::unique_ptr<Image> image = reader.read_bmp(ifs);
+
+    println("Image size: {} x {}", image->width(), image->height());
+
+    std::ofstream ofs("imgdump.bin", std::ios::out | std::ios::binary);
+    auto width = static_cast<uint32_t>(image->width()) ;
+    auto height = static_cast<uint32_t>(image->height());
+    ofs.write(reinterpret_cast<char*>(&width), sizeof(width));
+    ofs.write(reinterpret_cast<char*>(&height), sizeof(height));
+
+    for (size_t y = 0; y < image->height(); y++) {
+        for (size_t x = 0; x < image->width(); x++) {
+            Rgba8Pixel pixel = image->get_rgba8_lossy(x, y);
+            ofs.write(reinterpret_cast<char*>(&pixel), sizeof(pixel));
+
+            // println("Pixel {}, {} : {} {} {} {}", x, y, pixel.r, pixel.g, pixel.b, pixel.a);
+        }
+    }
 
     return 0;
 }

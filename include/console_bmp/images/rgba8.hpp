@@ -22,7 +22,7 @@ public:
         : m_data(std::move(data)), m_width(width), m_height(height)
     {
         size_t abs_size = std::abs(width) * std::abs(height);
-        if (abs_size != data.size())
+        if (abs_size != m_data.size())
             throw std::invalid_argument("size of data array does not match");
     }
 
@@ -30,8 +30,8 @@ public:
         : Rgba8(reinterpret_cast<std::vector<Rgba8Pixel>&&>(std::move(data)), width, height)
     {
         size_t abs_size = std::abs(width) * std::abs(height);
-        if (abs_size * 4 != data.size())
-            throw std::invalid_argument("size of data array does not match");
+        if (abs_size * 4 != m_data.size())
+            throw std::invalid_argument("size of data array does not match (1)");
     }
 
     virtual ~Rgba8() {};
@@ -46,10 +46,10 @@ public:
         size_t abs_width = std::abs(m_width);
         size_t abs_height = std::abs(m_height);
 
-        size_t actual_x = m_width < 0 ? abs_width - 1 - x : x;
-        size_t actual_y = m_height < 0 ? abs_height - 1 - y : y;
+        size_t actual_x = m_width < 0 ? (abs_width - 1 - x) : x;
+        size_t actual_y = m_height < 0 ? (abs_height - 1 - y) : y;
         
-        return m_data[(actual_y * m_width + actual_x) * 4 ];
+        return m_data[actual_y * m_width + actual_x];
     }
 };
 };
