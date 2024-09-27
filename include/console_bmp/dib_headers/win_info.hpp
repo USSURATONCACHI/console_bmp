@@ -45,23 +45,7 @@ struct WinInfo : public HeaderBase {
     uint32_t num_important_colors;
 
     virtual const std::type_info& type() const { return typeid(WinInfo); }
-
     static const size_t IN_FILE_SIZE = 40;
-    virtual size_t in_file_size() const { return IN_FILE_SIZE; }
-    virtual size_t bitmasks_count() const { 
-        switch (compression_method) {
-            case CompressionMethod::ALPHABITFIELDS: return 4;
-            case CompressionMethod::BITFIELDS:      return 3;
-            default: return 0;
-        }
-    }
-    virtual size_t bits_per_pixel() const { return static_cast<size_t>(num_bits_per_pixel); }
-
-    virtual size_t palette_num_entries() const      { return static_cast<size_t>(num_colors_in_pallete); }
-    virtual size_t palette_num_channels() const     { return 4; }
-    virtual size_t palette_bits_per_channel() const { return 8; }
-    virtual ssize_t image_width() const  { return static_cast<ssize_t>(width_pixels); }
-    virtual ssize_t image_height() const { return static_cast<ssize_t>(height_pixels); }
 };
 
 struct WinInfoParser : public HeaderParser {

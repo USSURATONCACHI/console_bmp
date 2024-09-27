@@ -29,9 +29,7 @@ struct OS22X : public WinInfo {
 
     OS22X(WinInfo);
     virtual const std::type_info& type() const { return typeid(OS22X); }
-    
     static const size_t IN_FILE_SIZE = 64;
-    virtual size_t in_file_size() const        { return IN_FILE_SIZE; }
 };
 
 

@@ -7,6 +7,7 @@
 #include <format>
 #include <limits>
 #include <memory>
+#include <stdexcept> 
 
 #include <console_bmp/print.hpp>
 #include <console_bmp/bit_view.hpp>
@@ -16,9 +17,10 @@
 #include <console_bmp/dib_headers/header_base.hpp>
 #include <console_bmp/dib_headers/os21x.hpp>
 #include <console_bmp/dib_headers/os22x.hpp>
-#include <console_bmp/dib_headers/win_core.hpp>
 #include <console_bmp/dib_headers/win_info.hpp>
-#include <stdexcept>
+#include <console_bmp/dib_headers/win_core.hpp>
+
+#include <console_bmp/readers/win_info_reader.hpp>
 
 namespace console_bmp {
 
@@ -82,41 +84,54 @@ auto BmpReader::read_bmp(std::istream& is) -> std::unique_ptr<Image> {
     dib_headers::HeaderParser& parser = get_appropriate_parser(static_cast<size_t>(dib_header_size), info.file_type);
     std::unique_ptr<dib_headers::HeaderBase> header = parser.parse(is);
 
-    // Read bitmasks
-    println("There are {} bitmasks", header->bitmasks_count());
-    std::vector<uint32_t> bitmasks(header->bitmasks_count());
-    for (uint32_t& bitmask : bitmasks)
-        is.read(reinterpret_cast<char*>(&bitmask), sizeof(bitmask));
+    if (header->type() == typeid(dib_headers::WinInfo)) {
+        dib_headers::WinInfo& header_downcast = *dynamic_cast<dib_headers::WinInfo*>(header.get());
+        readers::WinInfoReader reader;
 
-    // Read palette
-    size_t palette_entry_size_bits = header->palette_bits_per_channel() * header->palette_num_channels();
-    size_t palette_size_bits = palette_entry_size_bits * header->palette_num_entries();
-    size_t palette_size_bytes = (palette_size_bits + 7) / 8;
+        reader.read(is, header_downcast);
 
-    std::vector<uint8_t> palette_data(palette_size_bytes);
-    is.read(reinterpret_cast<char*>(palette_data.data()), palette_size_bytes);
-
-    // Read the image itself
-    size_t row_size = ((header->bits_per_pixel() * std::abs(header->image_width()) + 31) / 32) * 4;
-    size_t pixel_array_size = row_size * std::abs(header->image_height());
-
-    std::vector<uint8_t> pixel_array(pixel_array_size);
-    is.read(reinterpret_cast<char*>(pixel_array.data()), pixel_array_size);
-
-    // Return
-    if (header->palette_num_entries() == 0) {
-        BmpNoPalette palette(
-            std::move(pixel_array),
-            std::abs(header->image_width()),
-            std::abs(header->image_height()),
-            header->palette_num_channels(),
-            header->bits_per_pixel() / header->palette_num_channels()
-        );
-
-        return std::make_unique<BmpNoPalette>(std::move(palette));
+        throw std::runtime_error("Unimplemented");
+        return nullptr;
     } else {
-        throw std::runtime_error("Paletted images are not supported yet.");
+        throw std::runtime_error("Unsupported BMP image kind: " + std::string(header->type().name()));
+        return nullptr;
     }
+
+    // Read bitmasks
+    // println("There are {} bitmasks", header->bitmasks_count());
+    // std::vector<uint32_t> bitmasks(header->bitmasks_count());
+    // for (uint32_t& bitmask : bitmasks)
+    //     is.read(reinterpret_cast<char*>(&bitmask), sizeof(bitmask));
+
+    // // Read palette
+    // size_t palette_entry_size_bits = header->palette_bits_per_channel() * header->palette_num_channels();
+    // size_t palette_size_bits = palette_entry_size_bits * header->palette_num_entries();
+    // size_t palette_size_bytes = (palette_size_bits + 7) / 8;
+
+    // std::vector<uint8_t> palette_data(palette_size_bytes);
+    // is.read(reinterpret_cast<char*>(palette_data.data()), palette_size_bytes);
+
+    // // Read the image itself
+    // size_t row_size = ((header->bits_per_pixel() * std::abs(header->image_width()) + 31) / 32) * 4;
+    // size_t pixel_array_size = row_size * std::abs(header->image_height());
+
+    // std::vector<uint8_t> pixel_array(pixel_array_size);
+    // is.read(reinterpret_cast<char*>(pixel_array.data()), pixel_array_size);
+
+    // // Return
+    // if (header->palette_num_entries() == 0) {
+    //     BmpNoPalette palette(
+    //         std::move(pixel_array),
+    //         std::abs(header->image_width()),
+    //         std::abs(header->image_height()),
+    //         header->palette_num_channels(),
+    //         header->bits_per_pixel() / header->palette_num_channels()
+    //     );
+
+    //     return std::make_unique<BmpNoPalette>(std::move(palette));
+    // } else {
+    //     throw std::runtime_error("Paletted images are not supported yet.");
+    // }
 
     return nullptr;
 }
