@@ -1,4 +1,6 @@
 build/
 .cache/
 .vscode/
+.venv/
 imgdump.bin
+images_gen/

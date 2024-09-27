@@ -8,5 +8,4 @@ bgr8
 rgb4_byte
 bgr4_byte
 gray
-pal8
 monob
