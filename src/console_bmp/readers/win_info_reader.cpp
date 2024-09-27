@@ -84,15 +84,15 @@ auto WinInfoReader::read(std::istream& is, dib_headers::WinInfo header, BmpFileI
     size_t row_size_bytes_padded = ((row_size_bits + 31) / 32) * 4; // rows must be aligned to 4 bytes
     size_t blob_size_must_be = row_size_bytes_padded * std::abs(header.height_pixels);
 
-    if (data_blob_size != blob_size_must_be) {
+    if (data_blob_size < blob_size_must_be) {
         println("Blob size must be {} bytes, but it is {} bytes", blob_size_must_be, data_blob_size);
         throw std::runtime_error("Data blob has incorrect size");
     }
 
     // Read data blob
-    std::vector<uint8_t> data_blob(data_blob_size);
+    std::vector<uint8_t> data_blob(blob_size_must_be);
     is.seekg(info.pixel_array_offset);
-    is.read(reinterpret_cast<char*>(data_blob.data()), data_blob_size);
+    is.read(reinterpret_cast<char*>(data_blob.data()), data_blob.size());
 
     // Map data from the blob to pixel data
     size_t image_pixel_width = static_cast<size_t>(std::abs(header.width_pixels));
