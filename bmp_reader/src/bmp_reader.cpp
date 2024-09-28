@@ -10,16 +10,17 @@
 #include <memory>
 #include <stdexcept> 
 
-#include <bmp_reader/print.hpp>
-#include <bmp_reader/bit_view.hpp>
+#include <bmp_reader/util/print.hpp>
+#include <bmp_reader/util/bit_view.hpp>
 
 #include <bmp_reader/dib_headers/header_base.hpp>
-#include <bmp_reader/dib_headers/os21x.hpp>
-#include <bmp_reader/dib_headers/os22x.hpp>
-#include <bmp_reader/dib_headers/win_info.hpp>
-#include <bmp_reader/dib_headers/win_core.hpp>
 
-#include <bmp_reader/readers/win_info_reader.hpp>
+#include <bmp_reader/dib_headers/os21x_parser.hpp>
+#include <bmp_reader/dib_headers/os22x_parser.hpp>
+#include <bmp_reader/dib_headers/win_info_parser.hpp>
+#include <bmp_reader/dib_headers/win_core_parser.hpp>
+
+#include <bmp_reader/win_info_reader/win_info_reader.hpp>
 
 namespace bmp_reader {
 
