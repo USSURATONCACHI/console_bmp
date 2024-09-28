@@ -6,10 +6,10 @@
 #include <stdexcept>
 #include <typeinfo>
 
-#include <console_bmp/dib_headers/header_base.hpp>
-#include <console_bmp/bmp_file_info.hpp>
+#include <bmp_reader/dib_headers/header_base.hpp>
+#include <bmp_reader/bmp_file_info.hpp>
 
-namespace console_bmp {
+namespace bmp_reader {
 namespace dib_headers {
 
 struct InvalidHeaderException : public std::runtime_error { using std::runtime_error::runtime_error; };
@@ -22,4 +22,4 @@ struct HeaderParser {
 };
 
 } // namespace dib_headers
-} // namespace console_bmp
+} // namespace bmp_reader

@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace console_bmp {
+namespace bmp_reader {
 
 inline void bitshift_right(uint8_t* val, int size, int shift);
 inline void bitshift_right(uint8_t* val, int size, int shift);
@@ -39,4 +39,4 @@ inline void bitshift_right(uint8_t* val, int size, int shift) {
 }
 
 
-} // namespace console_bmp
+} // namespace bmp_reader

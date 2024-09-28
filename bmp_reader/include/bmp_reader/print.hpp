@@ -4,7 +4,7 @@
 #include <format>
 #include <string>
 
-namespace console_bmp {
+namespace bmp_reader {
 
 void println(const std::string& format, const auto&... a) {
     std::string formattedString = std::vformat(format, std::make_format_args(std::forward<decltype(a)>(a)...));
@@ -16,4 +16,4 @@ void print(const std::string& format, const auto&... a) {
     std::cout << formattedString;
 }
 
-} // namespace console_bmp
+} // namespace bmp_reader

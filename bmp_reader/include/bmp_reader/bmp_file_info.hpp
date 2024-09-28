@@ -2,7 +2,7 @@
 
 #include <cstddef>
 
-namespace console_bmp {
+namespace bmp_reader {
 
 // https://en.wikipedia.org/wiki/BMP_file_format#Bitmap_file_header
 enum class BmpFileType {
@@ -23,4 +23,4 @@ struct BmpFileInfo {
     size_t pixel_array_offset;
 };
 
-} // namespace console_bmp
+} // namespace bmp_reader

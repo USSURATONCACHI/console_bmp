@@ -1,18 +1,18 @@
-#include <console_bmp/readers/win_info_reader.hpp>
+#include <bmp_reader/readers/win_info_reader.hpp>
 
 #include <cstdint>
 #include <cstdlib>
 #include <stdexcept>
 #include <vector>
 
-#include <console_bmp/bit_view.hpp>
-#include <console_bmp/print.hpp>
-#include <console_bmp/images/rgba8.hpp>
-#include <console_bmp/images/image.hpp>
+#include <bmp_reader/bit_view.hpp>
+#include <bmp_reader/print.hpp>
+#include <bmp_reader/images/rgba8.hpp>
+#include <bmp_reader/images/image.hpp>
 
-using console_bmp::println;
+using bmp_reader::println;
 
-namespace console_bmp {
+namespace bmp_reader {
 namespace readers {
 
 // class WinInfoReader {
@@ -153,4 +153,4 @@ auto WinInfoReader::read(std::istream& is, dib_headers::WinInfo header, BmpFileI
 }
 
 } // namespace readers
-} // namespace console_bmp
+} // namespace bmp_reader

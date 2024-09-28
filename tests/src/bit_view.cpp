@@ -1,9 +1,9 @@
 #include <cstdint>
 #include <gtest/gtest.h>
 
-#include <console_bmp/bit_view.hpp>
+#include <bmp_reader/bit_view.hpp>
 
-using namespace console_bmp;
+using namespace bmp_reader;
 
 TEST(BitView, AlignedRead) {
     uint8_t data[] = { 0x10, 0x32, 0x54, 0x76 };

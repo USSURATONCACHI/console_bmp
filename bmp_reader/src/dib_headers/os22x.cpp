@@ -1,11 +1,11 @@
-#include "console_bmp/dib_headers/header_parser.hpp"
-#include "console_bmp/dib_headers/win_info.hpp"
-#include <console_bmp/bmp_reader.hpp>
-#include <console_bmp/dib_headers/os22x.hpp>
-#include <console_bmp/bmp_file_info.hpp>
+#include "bmp_reader/dib_headers/header_parser.hpp"
+#include "bmp_reader/dib_headers/win_info.hpp"
+#include <bmp_reader/bmp_reader.hpp>
+#include <bmp_reader/dib_headers/os22x.hpp>
+#include <bmp_reader/bmp_file_info.hpp>
 #include <memory>
 
-namespace console_bmp {
+namespace bmp_reader {
 namespace dib_headers {
 
 OS22X::OS22X(WinInfo base) : WinInfo(base) {}
@@ -54,4 +54,4 @@ static void check_errors(OS22X header) {
 }
 
 } // namespace dib_headers
-} // namespace console_bmp
+} // namespace bmp_reader

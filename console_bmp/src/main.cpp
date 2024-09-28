@@ -6,16 +6,16 @@
 #include <fstream>
 #include <cstring>
 
-#include <console_bmp/print.hpp>
-#include <console_bmp/bmp_reader.hpp>
-#include <console_bmp/images/image.hpp>
+#include <bmp_reader/print.hpp>
+#include <bmp_reader/bmp_reader.hpp>
+#include <bmp_reader/images/image.hpp>
 
 #define GRADIENT " .'`^\",:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$"
 
-using console_bmp::println;
-using console_bmp::images::Image;
-using console_bmp::images::Rgba8Pixel;
-using console_bmp::BmpReader;
+using bmp_reader::println;
+using bmp_reader::images::Image;
+using bmp_reader::images::Rgba8Pixel;
+using bmp_reader::BmpReader;
 
 struct AppArguments {
     bool help;

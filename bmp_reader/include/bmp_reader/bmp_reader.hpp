@@ -5,11 +5,11 @@
 #include <stdexcept>
 #include <vector>
 
-#include <console_bmp/images/image.hpp>
-#include <console_bmp/bmp_file_info.hpp>
-#include <console_bmp/dib_headers/header_parser.hpp>
+#include <bmp_reader/images/image.hpp>
+#include <bmp_reader/bmp_file_info.hpp>
+#include <bmp_reader/dib_headers/header_parser.hpp>
 
-namespace console_bmp {
+namespace bmp_reader {
 
 struct UnsupportedBmpKindException : public std::runtime_error { using std::runtime_error::runtime_error; };
 
@@ -28,4 +28,4 @@ struct BmpReader {
     std::vector<std::unique_ptr<dib_headers::HeaderParser>> headers_parsers;
 };
 
-} // namespace console_bmp
+} // namespace bmp_reader

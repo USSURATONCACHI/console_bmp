@@ -1,13 +1,13 @@
 #pragma once
 
-#include <console_bmp/images/image.hpp>
+#include <bmp_reader/images/image.hpp>
 
 #include <cstdlib>
 #include <stdexcept>
 #include <vector>
 #include <iterator> // for ssize_t
 
-namespace console_bmp {
+namespace bmp_reader {
 namespace images {
 
 
@@ -54,4 +54,4 @@ public:
 };
 };
 
-} // namespace console_bmp
+} // namespace bmp_reader

@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace console_bmp {
+namespace bmp_reader {
 namespace images {
 
 struct Rgba8Pixel {
@@ -24,4 +24,4 @@ public:
 };
 
 } //namespace images
-} // namespace console_bmp
+} // namespace bmp_reader

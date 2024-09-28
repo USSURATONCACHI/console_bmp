@@ -1,6 +1,6 @@
-#include <console_bmp/bmp_file_info.hpp>
+#include <bmp_reader/bmp_file_info.hpp>
 
-namespace console_bmp {
+namespace bmp_reader {
 
 bool BmpFileType_is_OS2(BmpFileType t) {
     switch (t) {
@@ -30,4 +30,4 @@ const char* BmpFileType_to_string(BmpFileType t) {
 }
 
 
-} // namespace console_bmp
+} // namespace bmp_reader

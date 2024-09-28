@@ -1,12 +1,12 @@
-#include <console_bmp/dib_headers/win_core.hpp>
+#include <bmp_reader/dib_headers/win_core.hpp>
 
 #include <memory>
 
-#include <console_bmp/print.hpp>
-#include <console_bmp/bmp_reader.hpp>
-#include <console_bmp/bmp_file_info.hpp>
+#include <bmp_reader/print.hpp>
+#include <bmp_reader/bmp_reader.hpp>
+#include <bmp_reader/bmp_file_info.hpp>
 
-namespace console_bmp {
+namespace bmp_reader {
 namespace dib_headers {
 
 WinCoreParser::WinCoreParser() {}
@@ -30,4 +30,4 @@ auto WinCoreParser::parse(std::istream& is) -> std::unique_ptr<dib_headers::Head
 }
 
 } // namespace dib_headers
-} // namespace console_bmp
+} // namespace bmp_reader

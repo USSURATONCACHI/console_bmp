@@ -4,7 +4,7 @@
 #include <typeinfo>
 #include <iterator>
 
-namespace console_bmp {
+namespace bmp_reader {
 namespace dib_headers {
 
 struct HeaderBase {
@@ -12,4 +12,4 @@ struct HeaderBase {
 };
 
 } // namespace dib_headers
-} // namespace console_bmp
+} // namespace bmp_reader

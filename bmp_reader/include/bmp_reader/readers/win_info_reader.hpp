@@ -1,10 +1,10 @@
 #pragma once
 
 #include <istream>
-#include <console_bmp/dib_headers/win_info.hpp>
-#include <console_bmp/images/rgba8.hpp>
+#include <bmp_reader/dib_headers/win_info.hpp>
+#include <bmp_reader/images/rgba8.hpp>
 
-namespace console_bmp {
+namespace bmp_reader {
 namespace readers {
 
 class WinInfoReader {
@@ -14,4 +14,4 @@ public:
 };
 
 } // namespace readers
-} // namespace console_bmp
+} // namespace bmp_reader

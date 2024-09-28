@@ -6,10 +6,10 @@
 #include <memory>
 #include <istream>
 
-#include <console_bmp/dib_headers/header_base.hpp>
-#include <console_bmp/dib_headers/header_parser.hpp>
+#include <bmp_reader/dib_headers/header_base.hpp>
+#include <bmp_reader/dib_headers/header_parser.hpp>
 
-namespace console_bmp {
+namespace bmp_reader {
 namespace dib_headers {
 
 // OS21XBITMAPHEADER
@@ -32,4 +32,4 @@ struct OS21X_Parser : public HeaderParser {
 };
 
 } // namespace dib_headers
-} // namespace console_bmp
+} // namespace bmp_reader

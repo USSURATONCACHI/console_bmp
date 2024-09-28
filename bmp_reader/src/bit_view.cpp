@@ -1,9 +1,9 @@
-#include <console_bmp/bit_view.hpp>
+#include <bmp_reader/bit_view.hpp>
 
 #include <cstdint>
 #include <limits>
 
-namespace console_bmp {
+namespace bmp_reader {
 
 template<typename T>
 static T read_uint_shifted(T* read_from, size_t bit_offset) {
@@ -77,4 +77,4 @@ void BitView::write_from(size_t size_bits, size_t offset_bits, const void* in_da
 
 
 
-} // namespace console_bmp
+} // namespace bmp_reader

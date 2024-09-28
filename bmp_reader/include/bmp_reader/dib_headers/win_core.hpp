@@ -6,11 +6,11 @@
 #include <memory>
 #include <istream>
 
-#include <console_bmp/bmp_file_info.hpp>
-#include <console_bmp/dib_headers/header_base.hpp>
-#include <console_bmp/dib_headers/header_parser.hpp>
+#include <bmp_reader/bmp_file_info.hpp>
+#include <bmp_reader/dib_headers/header_base.hpp>
+#include <bmp_reader/dib_headers/header_parser.hpp>
 
-namespace console_bmp {
+namespace bmp_reader {
 namespace dib_headers {
 
 
@@ -34,4 +34,4 @@ struct WinCoreParser : public HeaderParser {
 };
 
 } // namespace dib_headers
-} // namespace console_bmp
+} // namespace bmp_reader

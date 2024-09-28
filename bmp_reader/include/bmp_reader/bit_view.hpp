@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <cstddef>
 
-namespace console_bmp {
+namespace bmp_reader {
 
 struct BitView {
     uint8_t* data_ptr;
@@ -25,4 +25,4 @@ struct BitView {
     }
 };
 
-} // namespace console_bmp
+} // namespace bmp_reader

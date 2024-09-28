@@ -1,12 +1,12 @@
-#include <console_bmp/dib_headers/os21x.hpp>
+#include <bmp_reader/dib_headers/os21x.hpp>
 
 #include <memory>
 
-#include <console_bmp/print.hpp>
-#include <console_bmp/bmp_reader.hpp>
-#include <console_bmp/bmp_file_info.hpp>
+#include <bmp_reader/print.hpp>
+#include <bmp_reader/bmp_reader.hpp>
+#include <bmp_reader/bmp_file_info.hpp>
 
-namespace console_bmp {
+namespace bmp_reader {
 namespace dib_headers {
 
 OS21X_Parser::OS21X_Parser() {}
@@ -30,4 +30,4 @@ auto OS21X_Parser::parse(std::istream& is) -> std::unique_ptr<dib_headers::Heade
 }
 
 } // namespace dib_headers
-} // namespace console_bmp
+} // namespace bmp_reader
