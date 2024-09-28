@@ -7,51 +7,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # For VSCode clang extension integraion
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -ggdb")
 
 add_subdirectory(third_party/argparse)
-
-# === console_bmp ===
-add_library(console_bmp STATIC
-    src/console_bmp/bmp_reader.cpp
-    src/console_bmp/bmp_file_info.cpp
-    src/console_bmp/bit_view.cpp
-    
-    src/console_bmp/readers/win_info_reader.cpp
-
-    src/console_bmp/dib_headers/os21x.cpp
-    src/console_bmp/dib_headers/os22x.cpp
-    src/console_bmp/dib_headers/win_core.cpp
-    src/console_bmp/dib_headers/win_info.cpp
-)
-target_include_directories(console_bmp PUBLIC "include/")
-# === console_bmp ===
-
-
-
-# === drawBmp ====
-add_executable(drawBmp
-    src/main.cpp
-)
-target_include_directories(drawBmp PUBLIC "include/")
-target_link_libraries(drawBmp PUBLIC console_bmp)
-# === drawBmp ====
-
-
-
-# === run_test ===
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
-)
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
-
-enable_testing()
-
-add_executable(run_test
-    src/test/bit_view.cpp
-)
-target_link_libraries(run_test GTest::gtest_main console_bmp)
-
-include(GoogleTest)
-gtest_discover_tests(run_test)
-# === run_test ===
+add_subdirectory(bmp_reader)
+add_subdirectory(console_bmp)
+add_subdirectory(tests)
