@@ -10,11 +10,25 @@
 #include <console_bmp/bmp_reader.hpp>
 #include <console_bmp/images/image.hpp>
 
+#define GRADIENT " .'`^\",:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$"
+
 using console_bmp::println;
 using console_bmp::images::Image;
 using console_bmp::images::Rgba8Pixel;
 using console_bmp::BmpReader;
 
+struct AppArguments {
+    bool help;
+
+    // Output mode
+    bool info;
+    bool out_raw_text;
+    bool out_term_buffer;
+    bool out_window;
+    
+    size_t width;
+    size_t height;
+};
 
 
 int main(int argc, char** argv) {
