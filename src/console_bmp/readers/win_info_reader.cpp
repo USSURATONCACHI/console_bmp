@@ -47,12 +47,43 @@ static auto read_bgr_pixel(BitView pixel_view, size_t bits_per_channel) -> image
     };
 }
 
+template<typename T>
+static auto read_channel_to(BitView pixel_view, size_t channel_index, size_t bits_per_channel) -> T {
+    const size_t T_bits = sizeof(T) * 8;
+
+    size_t bit_shift = 0;
+    if (bits_per_channel > T_bits)
+        bit_shift = bits_per_channel - T_bits;
+
+    T raw_value = pixel_view.read_as<T>(channel_index * bits_per_channel + bit_shift, bits_per_channel);
+
+    if (bits_per_channel < T_bits) {
+        raw_value <<= T_bits - bits_per_channel;
+    }
+
+    return raw_value;
+}
+
+static auto read_bgra_pixel(BitView pixel_view, size_t bits_per_channel, size_t max_channels) -> images::Rgba8Pixel {
+    images::Rgba8Pixel pixel { .r = 0, .g = 0, .b = 0, .a = 255 };
+    uint8_t* const channels[] = { &pixel.b, &pixel.g, &pixel.r, &pixel.a };
+
+    for (size_t c = 0; c < 4 && c < max_channels; c++) {
+        *(channels[c]) = read_channel_to<uint8_t>(pixel_view, c, bits_per_channel);
+    }
+
+    return pixel;
+}
+
 auto WinInfoReader::read(std::istream& is, dib_headers::WinInfo header, BmpFileInfo info) -> images::Rgba8 {
     if (header.compression_method != dib_headers::CompressionMethod::RGB) {
         throw std::runtime_error("Compression is not supported");
     }
 
-    // Read palette
+    const size_t channels_count = (header.num_bits_per_pixel % 3 == 0) ? 3 : 4;
+    const size_t bits_per_channel = header.num_bits_per_pixel / channels_count;
+
+    // Read palette (RGB only for now)
     size_t palette_size = header.num_colors_in_pallete;
     if (header.num_bits_per_pixel <= 16 && palette_size == 0) {
         println("Setting palette size to be 2^{}", header.num_bits_per_pixel);
@@ -67,12 +98,11 @@ auto WinInfoReader::read(std::istream& is, dib_headers::WinInfo header, BmpFileI
         palette[i].r = palette_bgra[i].r;
         palette[i].g = palette_bgra[i].g;
         palette[i].b = palette_bgra[i].b;
-        // palette[i].a = palette_bgra[i].a;
         palette[i].a = 255;
     }
 
     println("Palette has {} colors", palette.size());
-    // println("Bits per pixel is: {}", header.num_bits_per_pixel);
+    println("Bits per pixel is: {}", header.num_bits_per_pixel);
     // for (images::Rgba8Pixel p : palette) {
     //     println("{} {} {} {}", static_cast<uint64_t>(p.r), static_cast<uint64_t>(p.g), static_cast<uint64_t>(p.b), static_cast<uint64_t>(p.a));
     // }
@@ -109,9 +139,7 @@ auto WinInfoReader::read(std::istream& is, dib_headers::WinInfo header, BmpFileI
             images::Rgba8Pixel& out_pixel = pixels[(image_pixel_height - 1 - y) * image_pixel_width + x];
 
             if (palette.size() == 0) {
-                const size_t channels_count = 3;
-                const size_t bits_per_channel = header.num_bits_per_pixel / channels_count;
-                out_pixel = read_bgr_pixel(pixel_view, bits_per_channel);
+                out_pixel = read_bgra_pixel(pixel_view, bits_per_channel, channels_count);
             } else {
                 auto index = pixel_view.read_as<uint64_t>(0, header.num_bits_per_pixel);
                 out_pixel = palette.at(index);
