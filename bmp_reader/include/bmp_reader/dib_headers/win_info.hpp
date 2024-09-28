@@ -1,15 +1,9 @@
 #pragma once
 
 #include <cstdint>
-#include <cstddef>
 #include <typeinfo>
-#include <typeinfo>
-#include <memory>
-#include <istream>
 
-#include <bmp_reader/bmp_file_info.hpp>
 #include <bmp_reader/dib_headers/header_base.hpp>
-#include <bmp_reader/dib_headers/header_parser.hpp>
 
 namespace bmp_reader {
 namespace dib_headers {

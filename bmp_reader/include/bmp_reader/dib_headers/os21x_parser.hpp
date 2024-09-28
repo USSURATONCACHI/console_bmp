@@ -5,7 +5,6 @@
 #include <istream>
 
 #include <bmp_reader/bmp_file_info.hpp>
-#include <bmp_reader/dib_headers/header_base.hpp>
 #include <bmp_reader/dib_headers/header_parser.hpp>
 #include <bmp_reader/dib_headers/os21x.hpp>
 

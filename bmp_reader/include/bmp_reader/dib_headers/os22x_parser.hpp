@@ -1,7 +1,6 @@
 #pragma once
 
 #include <bmp_reader/bmp_file_info.hpp>
-#include <bmp_reader/dib_headers/header_base.hpp>
 #include <bmp_reader/dib_headers/header_parser.hpp>
 #include <bmp_reader/dib_headers/win_info_parser.hpp>
 #include <bmp_reader/dib_headers/os22x.hpp>

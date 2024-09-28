@@ -1,12 +1,7 @@
 #pragma once
 
 #include <cstdint>
-#include <memory>
-#include <istream>
 
-#include <bmp_reader/bmp_file_info.hpp>
-#include <bmp_reader/dib_headers/header_base.hpp>
-#include <bmp_reader/dib_headers/header_parser.hpp>
 #include <bmp_reader/dib_headers/win_info.hpp>
 
 namespace bmp_reader {
