@@ -1,8 +1,6 @@
 #pragma once
 
-#include <cstddef>
 #include <typeinfo>
-#include <iterator>
 
 namespace bmp_reader {
 namespace dib_headers {

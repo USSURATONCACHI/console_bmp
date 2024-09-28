@@ -4,7 +4,6 @@
 #include <istream>
 #include <memory>
 #include <stdexcept>
-#include <typeinfo>
 
 #include <bmp_reader/dib_headers/header_base.hpp>
 #include <bmp_reader/bmp_file_info.hpp>

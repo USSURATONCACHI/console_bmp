@@ -1,27 +1,16 @@
-#include "bmp_reader/dib_headers/header_parser.hpp"
-#include "bmp_reader/dib_headers/win_info.hpp"
-#include <bmp_reader/bmp_reader.hpp>
-#include <bmp_reader/dib_headers/os22x.hpp>
-#include <bmp_reader/bmp_file_info.hpp>
-#include <memory>
+#include <bmp_reader/dib_headers/os22x_parser.hpp>
 
 namespace bmp_reader {
 namespace dib_headers {
 
-OS22X::OS22X(WinInfo base) : WinInfo(base) {}
-
 // Parser
-OS22X_Parser::OS22X_Parser() {}
-
-OS22X_Parser::~OS22X_Parser() {}
-
 auto OS22X_Parser::is_valid_header(BmpFileType, size_t header_size) -> bool {
-    return header_size == OS22X::IN_FILE_SIZE;
+    return header_size == OS22X_Parser::HEADER_IN_FILE_SIZE;
 }
 
 static void check_errors(OS22X header);
 
-auto OS22X_Parser::parse(std::istream& is) -> std::unique_ptr<dib_headers::HeaderBase> {
+auto OS22X_Parser::parse_os22x(std::istream& is) -> OS22X {
     WinInfo base_header = parse_win_info(is);
 
     OS22X header(base_header);
@@ -37,7 +26,7 @@ auto OS22X_Parser::parse(std::istream& is) -> std::unique_ptr<dib_headers::Heade
 
     check_errors(header);
 
-    return std::make_unique<OS22X>(header);
+    return header;
 }
 
 static void check_errors(OS22X header) {

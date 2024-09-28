@@ -1,13 +1,8 @@
-#pragma once
-
-#include <cstdint>
+#include <bmp_reader/util/bitshift.hpp>
 
 namespace bmp_reader {
 
-inline void bitshift_right(uint8_t* val, int size, int shift);
-inline void bitshift_right(uint8_t* val, int size, int shift);
-
-inline void bitshift_left(uint8_t *val, int size, int shift) {
+void bitshift_left(uint8_t *val, int size, int shift) {
   if (shift < 0) {
     bitshift_right(val, size, -shift);
   } else {
@@ -22,7 +17,7 @@ inline void bitshift_left(uint8_t *val, int size, int shift) {
   }
 }
 
-inline void bitshift_right(uint8_t* val, int size, int shift) {
+void bitshift_right(uint8_t* val, int size, int shift) {
   if (shift < 0) {
     bitshift_left(val, size, -shift);
   } else if (shift > 0) {

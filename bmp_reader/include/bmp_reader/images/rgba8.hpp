@@ -5,7 +5,6 @@
 #include <cstdlib>
 #include <stdexcept>
 #include <vector>
-#include <iterator> // for ssize_t
 
 namespace bmp_reader {
 namespace images {
@@ -52,6 +51,6 @@ public:
         return m_data[actual_y * m_width + actual_x];
     }
 };
-};
 
+} // namespace images
 } // namespace bmp_reader

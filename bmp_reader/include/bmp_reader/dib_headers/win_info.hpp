@@ -32,7 +32,6 @@ auto CompressionMethod_to_string(CompressionMethod c) -> const char*;
 
 // BITMAPINFOHEADER
 struct WinInfo : public HeaderBase {
-    // size of this header, 4 bytes
     int32_t width_pixels;
     int32_t height_pixels;
     int16_t num_color_planes; // must be 1 ?
@@ -45,16 +44,6 @@ struct WinInfo : public HeaderBase {
     uint32_t num_important_colors;
 
     virtual const std::type_info& type() const { return typeid(WinInfo); }
-    static const size_t IN_FILE_SIZE = 40;
-};
-
-struct WinInfoParser : public HeaderParser {
-    WinInfoParser();
-    virtual ~WinInfoParser();
-    virtual auto is_valid_header(BmpFileType type, size_t header_size) -> bool;
-    virtual auto parse(std::istream& is) -> std::unique_ptr<dib_headers::HeaderBase>;
-    
-    virtual auto parse_win_info(std::istream& is) -> dib_headers::WinInfo;
 };
 
 

@@ -1,14 +1,11 @@
 #pragma once
 
 #include <cstddef>
-#include <cstdint>
+#include <bmp_reader/images/pixels.hpp>
 
 namespace bmp_reader {
 namespace images {
 
-struct Rgba8Pixel {
-    uint8_t r, g, b, a;
-};
 
 class Image {
 public:
