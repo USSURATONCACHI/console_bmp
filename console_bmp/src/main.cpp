@@ -19,52 +19,18 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    println("Skibidi sigma!");
     BmpDisplay display;
     
+    display.setShowInfo(cli_args.info);
     display.openBMP(cli_args.bmp_file_path.string());
-    display.displayBMP(378, 111);
+
+    if (!cli_args.no_raw_text)
+        display.displayBMP(cli_args.width, cli_args.height);
+
+    if (cli_args.out_window)
+        display.displayBMPInWindow();
+
     display.closeBMP();
 
     return 0;
 }
-
-// int main(int argc, char** argv) {
-//     if (argc != 2) {
-//         println("Error: BMP file is not specified.");
-//         println("Usage: {} <filepath>", argv[0]);
-//         println("DrawBMP - reads a BMP image file and prints it to console.");
-//         return 1;
-//     }
-
-//     std::filesystem::path bmp_filepath(argv[1]);
-//     println("Filepath: {}", std::string(bmp_filepath));
-
-//     std::ifstream ifs(bmp_filepath, std::ios::in | std::ios::binary);
-//     if (!ifs.is_open()) {
-//         println("Failed to open the file.");
-//         return 2;
-//     }
-
-//     BmpReader reader;
-//     std::unique_ptr<Image> image = reader.read_bmp(ifs);
-
-//     println("Image size: {} x {}", image->width(), image->height());
-
-//     std::ofstream ofs("imgdump.bin", std::ios::out | std::ios::binary);
-//     auto width = static_cast<uint32_t>(image->width()) ;
-//     auto height = static_cast<uint32_t>(image->height());
-//     ofs.write(reinterpret_cast<char*>(&width), sizeof(width));
-//     ofs.write(reinterpret_cast<char*>(&height), sizeof(height));
-
-//     for (size_t y = 0; y < image->height(); y++) {
-//         for (size_t x = 0; x < image->width(); x++) {
-//             Rgba8Pixel pixel = image->get_rgba8_lossy(x, y);
-//             ofs.write(reinterpret_cast<char*>(&pixel), sizeof(pixel));
-
-//             // println("Pixel {}, {} : {} {} {} {}", x, y, pixel.r, pixel.g, pixel.b, pixel.a);
-//         }
-//     }
-
-//     return 0;
-// }

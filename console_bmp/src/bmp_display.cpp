@@ -1,3 +1,4 @@
+#include <chrono>
 #include <cmath>
 #include <console_bmp/bmp_display.hpp>
 
@@ -7,19 +8,25 @@
 #include <bmp_reader/images/rgba8.hpp>
 #include <bmp_reader/util/print.hpp>
 #include <bmp_reader/bmp_reader.hpp>
+#include <thread>
 #include <tuple>
 
 #include <SFML/Graphics.hpp>
 
 using bmp_reader::print;
 using bmp_reader::println;
+using bmp_reader::eprintln;
 
 namespace console_bmp {
 
 
 BmpDisplay::BmpDisplay()
-    : m_image({})
+    : m_image({}), m_show_info(false)
 {}
+
+void BmpDisplay::setShowInfo(bool do_show) {
+    m_show_info = do_show;
+}
 
 void BmpDisplay::openBMP(const std::string& fileName) {
     std::ifstream ifs(fileName, std::ios::in | std::ios::binary);
@@ -31,7 +38,7 @@ void BmpDisplay::openBMP(const std::string& fileName) {
     reader.add_default_parsers();
 
     println("Gonna read that BMP file...");
-    bmp_reader::images::Rgba8 image = reader.read_bmp(ifs);
+    bmp_reader::images::Rgba8 image = reader.read_bmp(ifs, m_show_info);
 
     println("Image size: {} x {}", image.width(), image.height());
     
@@ -72,36 +79,43 @@ void BmpDisplay::displayBMP(size_t max_width, size_t max_height) {
             auto [sum, count] = sum_pixels(start_x, start_y, end_x, end_y);
             size_t char_index = gradient.length() - (sum * gradient.length() / count / 256) - 1;
             print("{}", gradient.at(char_index));
-            print("{}", gradient.at(char_index));
-            // auto pixel = m_image->get_rgba8_lossy(x, y);
-            // println("Value: {} {} {} {}", pixel.r, pixel.g, pixel.b, pixel.a);
         }
         print("\n");
     }
+}
 
-        // Create an SFML texture and update it with the pixel array
-    sf::Texture texture;
-    texture.create(m_image->width(), m_image->height());
-    texture.update(reinterpret_cast<uint8_t*>(m_image->data()));
+void BmpDisplay::displayBMPInWindow() {
+    #ifndef CONSOLE_BMP_SFML_WINDOW
+        eprintln("Displaying BMP in window is not supported");
+    #else
+        sf::Texture texture;
+        texture.create(m_image->width(), m_image->height());
+        texture.update(reinterpret_cast<uint8_t*>(m_image->data()));
 
-    // Create a sprite to display the texture
-    sf::Sprite sprite(texture);
+        // Create a sprite to display the texture
+        sf::Sprite sprite(texture);
 
-    // Create a window
-    sf::RenderWindow window(sf::VideoMode(m_image->width(), m_image->height()), "RGBA8 Image");
+        sprite.setScale(
+            m_image->flipped_w() ? -1.0f : 1.0f, 
+            m_image->flipped_h() ?  -1.0f : 1.0f
+        );
 
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
-                window.close();
+        // Create a window
+        sf::RenderWindow window(sf::VideoMode(m_image->width(), m_image->height()), "RGBA8 Image");
+
+        while (window.isOpen()) {
+            sf::Event event;
+            while (window.pollEvent(event)) {
+                if (event.type == sf::Event::Closed)
+                    window.close();
+            }
+
+            window.clear();
+            window.draw(sprite);
+            window.display();
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
-
-        window.clear();
-        window.draw(sprite);
-        window.display();
-    }
-
+    #endif
 }
 
 std::tuple<uint64_t, uint64_t> BmpDisplay::sum_pixels(size_t start_x, size_t start_y, size_t end_x, size_t end_y) {
