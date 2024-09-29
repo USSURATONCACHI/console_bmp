@@ -17,9 +17,8 @@ public:
 
     virtual auto read_rgba(BitView bv) -> images::Rgba8Pixel;
 
-private:
+protected:
     std::span<images::Rgba8Pixel const> m_rgba_palette;
-    size_t m_bits_per_pixel;
 };
 
 
