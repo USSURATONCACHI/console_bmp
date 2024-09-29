@@ -13,6 +13,15 @@ template<typename T>
 static void write_uint_shifted(T* write_to, size_t bit_offset, T data);
 
 
+BitView::BitView(void* data, size_t bitshift)
+    : data_ptr(reinterpret_cast<uint8_t*>(data)),
+    bits_offset(bitshift)
+{}
+
+BitView::BitView(void* data)
+    : BitView(data, 0)
+{}
+
 void BitView::read_into(size_t size_bits, size_t offset_bits, void* out_data) const{
     size_t pos_bits = this->bits_offset + offset_bits;
     size_t pos_bytes = pos_bits / 8;

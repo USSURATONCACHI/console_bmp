@@ -15,7 +15,7 @@ public:
     virtual ~PixelReader() {}
 
     virtual auto read_rgba(BitView bv) -> images::Rgba8Pixel = 0;
-    virtual void read_row_rgba(BitView bv, size_t row_size, std::span<images::Rgba8Pixel>& read_into);
+    virtual void read_row_rgba(BitView bv, size_t row_size, std::span<images::Rgba8Pixel> read_into);
 
 private:
     size_t m_bits_per_pixel;

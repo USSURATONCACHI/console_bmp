@@ -9,6 +9,9 @@ struct BitView {
     uint8_t* data_ptr;
     size_t bits_offset;
 
+    BitView(void* data, size_t bitshift);
+    BitView(void* data);
+
     void read_into(size_t size_bits, size_t offset_bits, void* out_data) const;
     void write_from(size_t size_bits, size_t offset_bits, const void* in_data) const;
 
@@ -25,10 +28,7 @@ struct BitView {
     }
 
     inline auto subview(size_t bitshift) -> BitView {
-        return BitView {
-            .data_ptr = data_ptr,
-            .bits_offset = bits_offset + bitshift,
-        };
+        return BitView(data_ptr, bits_offset + bitshift);
     }
 };
 

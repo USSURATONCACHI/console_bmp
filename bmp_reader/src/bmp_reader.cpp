@@ -1,4 +1,3 @@
-#include "bmp_reader/images/rgba8.hpp"
 #include <bmp_reader/bmp_reader.hpp>
 
 #include <cstddef>
@@ -7,30 +6,33 @@
 #include <cstring>
 #include <format>
 #include <limits>
-#include <memory>
 #include <stdexcept> 
 
 #include <bmp_reader/util/print.hpp>
 #include <bmp_reader/util/bit_view.hpp>
 
-#include <bmp_reader/dib_headers/header_base.hpp>
+#include <bmp_reader/images/rgba8.hpp>
 
+#include <bmp_reader/dib_headers/header_base.hpp>
 #include <bmp_reader/dib_headers/os21x_parser.hpp>
 #include <bmp_reader/dib_headers/os22x_parser.hpp>
 #include <bmp_reader/dib_headers/win_info_parser.hpp>
 #include <bmp_reader/dib_headers/win_core_parser.hpp>
 
-#include <bmp_reader/win_info_reader/win_info_reader.hpp>
+#include <bmp_reader/readers/win_info_reader.hpp>
 
 namespace bmp_reader {
 
-BmpReader::BmpReader() {
+BmpReader::BmpReader() 
+    : headers_parsers()
+{}
+
+void BmpReader::add_default_parsers() {
     add_header_parser(std::make_unique<dib_headers::OS21X_Parser>());
     add_header_parser(std::make_unique<dib_headers::OS22X_Parser>());
     add_header_parser(std::make_unique<dib_headers::WinCoreParser>());
     add_header_parser(std::make_unique<dib_headers::WinInfoParser>());
 }
-BmpReader::~BmpReader() {}
 
 void BmpReader::add_header_parser(std::unique_ptr<dib_headers::HeaderParser>&& ptr) {
     headers_parsers.push_back(std::move(ptr));
@@ -72,7 +74,7 @@ auto BmpReader::get_appropriate_parser(size_t header_size, BmpFileType type) -> 
     );
 }
 
-auto BmpReader::read_bmp(std::istream& is) -> std::unique_ptr<images::Image> {
+auto BmpReader::read_bmp(std::istream& is) -> images::Rgba8 {
     // Read file header
     BmpFileInfo info = read_bmp_file_header(is);
 
@@ -86,16 +88,13 @@ auto BmpReader::read_bmp(std::istream& is) -> std::unique_ptr<images::Image> {
 
     if (header->type() == typeid(dib_headers::WinInfo)) {
         dib_headers::WinInfo& header_downcast = *dynamic_cast<dib_headers::WinInfo*>(header.get());
-        readers::WinInfoReader reader;
-
-        images::Rgba8 image = reader.read(is, header_downcast, info);
-        return std::make_unique<images::Rgba8>(std::move(image));
+        
+        readers::WinInfoReader reader(header_downcast, info);
+        images::Rgba8 image = reader.read(is);
+        return image;
     } else {
         throw std::runtime_error("Unsupported BMP image kind: " + std::string(header->type().name()));
-        return nullptr;
     }
-
-    return nullptr;
 }
 
 auto BmpReader::read_bmp_file_header(std::istream& is) -> BmpFileInfo {

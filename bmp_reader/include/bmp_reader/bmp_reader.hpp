@@ -1,7 +1,7 @@
 #pragma once
 
 #include <istream>
-#include <stdexcept>
+#include <memory>
 #include <vector>
 
 #include <bmp_reader/images/image.hpp>
@@ -13,10 +13,12 @@ namespace bmp_reader {
 
 struct UnsupportedBmpKindException : public std::runtime_error { using std::runtime_error::runtime_error; };
 
-struct BmpReader {
+class BmpReader {
+public:
     BmpReader();
-    virtual ~BmpReader(); 
+    virtual ~BmpReader() {}
     virtual void add_header_parser(std::unique_ptr<dib_headers::HeaderParser>&& ptr);
+    virtual void add_default_parsers();
 
     // Reading logic
     virtual auto read_bmp(std::istream& is) -> images::Rgba8;
@@ -25,7 +27,7 @@ struct BmpReader {
     virtual auto read_bmp_file_header(std::istream& is) -> BmpFileInfo;
     virtual auto get_appropriate_parser(size_t header_size, BmpFileType type) -> dib_headers::HeaderParser&;
 
-    protected:
+protected:
     std::vector<std::unique_ptr<dib_headers::HeaderParser>> headers_parsers;
 };
 

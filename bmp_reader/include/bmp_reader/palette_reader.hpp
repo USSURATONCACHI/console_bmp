@@ -12,10 +12,13 @@ using RgbaPalette = std::vector<images::Rgba8Pixel>;
 
 class PaletteReader {
 public:
-    PaletteReader() {}
+    PaletteReader(size_t channels_count);
 
-    virtual auto read_bgra(std::istream& is, size_t entries_count, size_t channels_count) -> BgraPalette;
-    virtual auto bgra_palette_to_rgba(BgraPalette&& bgra) -> RgbaPalette;
+    virtual auto read_bgra(std::istream& is, size_t entries_count) -> BgraPalette;
+    static auto bgra_palette_to_rgba(BgraPalette&& bgra) -> RgbaPalette;
+
+private:
+    size_t m_channels_count;
 };
 
 

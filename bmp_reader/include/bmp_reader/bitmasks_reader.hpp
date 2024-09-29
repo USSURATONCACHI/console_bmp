@@ -6,20 +6,22 @@
 #include <bmp_reader/color_bitmasks.hpp>
 
 namespace bmp_reader {
-namespace readers {
 
 
 struct BitmasksReader {
-    BitmasksReader() {}
+public:
+    BitmasksReader(const dib_headers::WinInfo& header);
     virtual ~BitmasksReader() {}
 
-    virtual auto read_bitmasks(std::istream& is, const dib_headers::WinInfo& header) -> ColorBitmasks;
+    virtual auto read_bitmasks(std::istream& is) -> ColorBitmasks;
 
     virtual auto read_bgr_bitmasks(std::istream& is) -> ColorBitmasks;
     virtual auto read_bgra_bitmasks(std::istream& is) -> ColorBitmasks;
-    virtual auto get_default_bitmasks(const dib_headers::WinInfo& header) -> ColorBitmasks;
+    virtual auto get_default_bitmasks() -> ColorBitmasks;
+
+private:
+    const dib_headers::WinInfo& m_header;
 };
 
 
-} // namespace readers
 } // namespace bmp_reader

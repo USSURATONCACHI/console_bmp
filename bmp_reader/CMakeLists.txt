@@ -9,12 +9,12 @@ add_library(bmp_reader STATIC
     src/pixel_reader/pixel_paletted_reader.cpp
     src/pixel_reader/pixel_reader.cpp
 
-    src/readers/bitmasks_reader.cpp
     src/readers/win_info_reader.cpp
 
     src/util/bit_view.cpp
     src/util/bitshift.cpp
-
+    
+    src/bitmasks_reader.cpp
     src/bmp_file_info.cpp
     src/bmp_reader.cpp
     src/palette_reader.cpp

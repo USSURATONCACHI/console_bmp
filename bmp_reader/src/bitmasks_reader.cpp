@@ -1,13 +1,15 @@
-#include <bmp_reader/win_info_reader/bitmasks_reader.hpp>
+#include <bmp_reader/bitmasks_reader.hpp>
 
 #include <limits>
 
 namespace bmp_reader {
-namespace readers {
 
+BitmasksReader::BitmasksReader(const dib_headers::WinInfo& header) 
+    : m_header(header)
+{}
 
-auto BitmasksReader::read_bitmasks(std::istream& is, const dib_headers::WinInfo& header) -> ColorBitmasks {
-    switch (header.compression_method) {
+auto BitmasksReader::read_bitmasks(std::istream& is) -> ColorBitmasks {
+    switch (m_header.compression_method) {
         case dib_headers::CompressionMethod::BITFIELDS:
             return read_bgr_bitmasks(is);
 
@@ -15,7 +17,7 @@ auto BitmasksReader::read_bitmasks(std::istream& is, const dib_headers::WinInfo&
             return read_bgra_bitmasks(is);
 
         default:
-            return get_default_bitmasks(header);
+            return get_default_bitmasks();
     }
 }
 
@@ -36,8 +38,8 @@ auto BitmasksReader::read_bgra_bitmasks(std::istream& is) -> ColorBitmasks {
     return bitmasks;
 }
 
-auto BitmasksReader::get_default_bitmasks(const dib_headers::WinInfo& header) -> ColorBitmasks {
-    const size_t bits_per_channel = header.bits_per_channel();
+auto BitmasksReader::get_default_bitmasks() -> ColorBitmasks {
+    const size_t bits_per_channel = m_header.bits_per_channel();
     const uint32_t channel_mask = std::numeric_limits<uint32_t>::max() >> (32 - bits_per_channel);
 
     return ColorBitmasks {
@@ -49,5 +51,4 @@ auto BitmasksReader::get_default_bitmasks(const dib_headers::WinInfo& header) ->
 }
 
 
-} // namespace readers
 } // namespace bmp_reader
