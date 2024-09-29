@@ -13,7 +13,7 @@ namespace readers {
 auto WinCoreReader::read(std::istream& is) -> Rgba8Image {
     // Read palette
     PaletteReader palette_reader(m_header.channels_count());
-    RgbaPalette palette = palette_reader.read_palette_rgba(is, 1 << m_header.num_bits_per_pixel);
+    RgbaPalette palette = palette_reader.read_palette_rgba(is, static_cast<size_t>(1) << m_header.num_bits_per_pixel);
     
     PixelPalettedReader pixel_reader(m_header.num_bits_per_pixel, palette);
 

@@ -6,7 +6,7 @@
 using namespace bmp_reader;
 
 TEST(BitView, AlignedRead) {
-    uint8_t data[] = { 0x10, 0x32, 0x54, 0x76 };
+    uint8_t data[] = { 0x10, 0x32, 0x54, 0x76, 0x00 };
     
     BitView view(data);
 
@@ -20,7 +20,7 @@ TEST(BitView, AlignedRead) {
 
 
 TEST(BitView, ShiftedRead1) {
-    uint8_t data[] = { 0x10, 0x32, 0x54, 0x76 };
+    uint8_t data[] = { 0x10, 0x32, 0x54, 0x76, 0x00 };
     
     BitView view(data, 4);
 
@@ -35,7 +35,7 @@ TEST(BitView, ShiftedRead1) {
 }
 
 TEST(BitView, ShiftedRead2) {
-    uint8_t data[] = { 0x10, 0x32, 0x54, 0x76 };
+    uint8_t data[] = { 0x10, 0x32, 0x54, 0x76, 0x00 };
     
     BitView view(data, 2);
 
