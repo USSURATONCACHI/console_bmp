@@ -23,7 +23,10 @@ auto BmpReaderBase::read_row_by_row(std::istream& is, int64_t width, int64_t hei
     for (int64_t y = abs_height - 1; y >= 0; y--) {
         is.read(reinterpret_cast<char*>(row_data.data()), row_data.size());
 
-        auto save_to = std::span(&final_pixels[y * abs_width], &final_pixels[(y + 1) * abs_width]);
+        auto save_to = std::span(
+            final_pixels.begin() + (y * abs_width), 
+            final_pixels.begin() + ((y + 1) * abs_width)
+        );
         pixel_reader.read_pixel_row_rgba(BitView(row_data.data()), abs_width, save_to);
     }
     
