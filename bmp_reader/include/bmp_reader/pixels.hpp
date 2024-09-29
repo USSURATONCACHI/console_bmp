@@ -7,7 +7,6 @@ namespace bmp_reader {
 struct Rgba8Pixel {
     uint8_t r, g, b, a;
 };
-
 struct Bgra8Pixel {
     uint8_t b, g, r, a;
 };
@@ -15,6 +14,10 @@ struct Bgra8Pixel {
 struct Cmyk8Pixel {
     uint8_t c, m, y, k;
 };
+inline auto operator==(const Rgba8Pixel& a, const Rgba8Pixel& b) -> bool {
+    return a.r == b.r && a.g == b.g && a.b == b.b && a.a == b.a;
+}
+
 
 
 static inline auto cmyk_to_rgb(Cmyk8Pixel p) -> Rgba8Pixel {

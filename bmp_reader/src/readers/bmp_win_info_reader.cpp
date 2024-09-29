@@ -1,3 +1,4 @@
+#include "bmp_reader/util/print.hpp"
 #include <bmp_reader/readers/bmp_win_info_reader.hpp>
 
 #include <span>
@@ -38,7 +39,9 @@ auto WinInfoReader::read(std::istream& is) -> Rgba8Image {
 
     // Read bitmasks
     BitmasksReader bitmasks_reader(m_header);
-    PixelBitmaskedReader pixel_masked_reader(bitmasks_reader.read_bitmasks(is), m_header.num_bits_per_pixel, m_header.channels_count());
+    auto bitmasks = bitmasks_reader.read_bitmasks(is);
+    println("Bitmasks: {} {} {} {}", bitmasks.b, bitmasks.g, bitmasks.r, bitmasks.a);
+    PixelBitmaskedReader pixel_masked_reader(bitmasks, m_header.num_bits_per_pixel, m_header.channels_count());
     
     // Check data blob
     size_t blob_size = m_header.actual_data_size(m_file_info);

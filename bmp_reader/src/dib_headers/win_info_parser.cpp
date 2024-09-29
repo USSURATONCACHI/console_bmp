@@ -7,7 +7,12 @@ namespace dib_headers {
 
 
 auto WinInfoParser::is_valid_header(BmpFileType, size_t header_size) -> bool {
-    return header_size == WinInfoParser::HEADER_IN_FILE_SIZE;
+    const size_t info_size = WinInfoParser::HEADER_IN_FILE_SIZE;
+    return header_size == info_size ||  // BITMAPINFOHEADER
+           header_size == 52 ||         // BITMAPV2INFOHEADER
+           header_size == 56 ||         // BITMAPV3INFOHEADER
+           header_size == 108 ||        // BITMAPV4HEADER
+           header_size == 124;          // BITMAPV5HEADER
 }
 
 static void check_errors(WinInfo header);
