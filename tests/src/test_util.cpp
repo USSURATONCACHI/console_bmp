@@ -123,13 +123,13 @@ TEST(TestUtil, VectorAsCharStreambufSeekg) {
     stream.read(reinterpret_cast<char*>(&c), 1);
     EXPECT_EQ(c, 0x01);
 
-    stream.seekg(1);
-    stream.read(reinterpret_cast<char*>(&c), 1);
-    EXPECT_EQ(c, 0x44);
-
     stream.seekg(2);
     stream.read(reinterpret_cast<char*>(&c), 1);
     EXPECT_EQ(c, 0x88);
+
+    stream.seekg(1);
+    stream.read(reinterpret_cast<char*>(&c), 1);
+    EXPECT_EQ(c, 0x44);
 
     stream.seekg(3);
     stream.read(reinterpret_cast<char*>(&c), 1);
