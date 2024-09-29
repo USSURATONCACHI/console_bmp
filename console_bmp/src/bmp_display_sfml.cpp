@@ -2,12 +2,12 @@
 
 #include <thread>
 
-#include <SFML/Graphics.hpp>
-
 #include <bmp_reader/util/print.hpp>
 
 #ifndef CONSOLE_BMP_SFML_WINDOW
     using bmp_reader::eprintln;
+#else
+    #include <SFML/Graphics.hpp>
 #endif
 
 namespace console_bmp {
