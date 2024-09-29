@@ -1,3 +1,4 @@
+#include <SFML/Window/VideoMode.hpp>
 #include <chrono>
 #include <cmath>
 #include <console_bmp/bmp_display.hpp>
@@ -37,10 +38,7 @@ void BmpDisplay::openBMP(const std::string& fileName) {
     bmp_reader::BmpReader reader;
     reader.add_default_parsers();
 
-    println("Gonna read that BMP file...");
     bmp_reader::images::Rgba8 image = reader.read_bmp(ifs, m_show_info);
-
-    println("Image size: {} x {}", image.width(), image.height());
     
     m_image = image;
 }

@@ -15,9 +15,9 @@ auto PaletteReader::read_bgra(std::istream& is, size_t entries_count) -> BgraPal
     if (m_channels_count < 4) {
         for (auto& pixel : palette_bgra) {
             pixel.r = m_channels_count < 1 ? 0 : pixel.r;
-            pixel.g = m_channels_count < 1 ? 0 : pixel.g;
-            pixel.b = m_channels_count < 1 ? 0 : pixel.b;
-            pixel.a = m_channels_count < 1 ? 0 : pixel.a;
+            pixel.g = m_channels_count < 2 ? 0 : pixel.g;
+            pixel.b = m_channels_count < 3 ? 0 : pixel.b;
+            pixel.a = m_channels_count < 4 ? 255 : pixel.a;
         }
     }
 

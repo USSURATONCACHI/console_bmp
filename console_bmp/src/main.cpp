@@ -3,7 +3,6 @@
 #include <console_bmp/bmp_display.hpp>
 
 
-using bmp_reader::println;
 using bmp_reader::eprintln;
 
 using namespace console_bmp;
