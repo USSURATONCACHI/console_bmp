@@ -65,7 +65,7 @@ auto WinInfoReader::read(std::istream& is) -> images::Rgba8 {
         throw std::runtime_error("Data blob has insufficient size. File might have been corrupted.");
 
     // Pick a correct pixel reader
-    std::unique_ptr<pixel_reader::PixelReader> pixel_reader;
+    std::unique_ptr<pixel_reader::PixelReader> pixel_reader = {};
     if (palette.empty())
         pixel_reader = std::make_unique<pixel_reader::PixelBitmaskedReader>(bitmasks, m_header.num_bits_per_pixel, m_header.channels_count());
     else

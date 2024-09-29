@@ -18,7 +18,6 @@ public:
 
 private:
     ColorBitmasks m_bitmasks;
-    size_t m_bits_per_pixel;
     size_t m_channels_count;
 };
 
