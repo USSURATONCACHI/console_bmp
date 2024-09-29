@@ -40,7 +40,6 @@ auto WinInfoReader::read(std::istream& is) -> Rgba8Image {
     // Read bitmasks
     BitmasksReader bitmasks_reader(m_header);
     auto bitmasks = bitmasks_reader.read_bitmasks(is);
-    println("Bitmasks: {} {} {} {}", bitmasks.b, bitmasks.g, bitmasks.r, bitmasks.a);
     PixelBitmaskedReader pixel_masked_reader(bitmasks, m_header.num_bits_per_pixel, m_header.channels_count());
     
     // Check data blob

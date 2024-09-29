@@ -23,7 +23,6 @@ auto PixelBitmaskedReader::read_pixel_rgba(BitView pixel_view) -> Rgba8Pixel {
         .b = shift_bitmasked_to_u8(bits & m_bitmasks.b, m_bitmasks.b),
         .a = shift_bitmasked_to_u8(bits & m_bitmasks.a, m_bitmasks.a),
     };
-    println("Pixel RGBA: {} {} {} {} (bits = {}, bpp = {})", pixel.r, pixel.g, pixel.b, pixel.a, bits, m_bits_per_pixel);
 
     if (m_channels_count < 4)
         pixel.a = 255; // no opacity
