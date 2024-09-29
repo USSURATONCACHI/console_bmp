@@ -6,8 +6,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # For VSCode clang extension integraion
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -ggdb")
 
+set(SFML_BUILD_AUDIO OFF)
+set(SFML_BUILD_NETWORK OFF)
+set(SFML_BUILD_DOC OFF)
+
+find_package(SFML COMPONENTS graphics REQUIRED)
+
 add_subdirectory(third_party/argparse)
 add_subdirectory(third_party/googletest)
+
 add_subdirectory(bmp_reader)
 add_subdirectory(console_bmp)
 add_subdirectory(tests)

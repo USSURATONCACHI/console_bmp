@@ -2,7 +2,6 @@
 #include <console_bmp/cli_args.hpp>
 #include <console_bmp/bmp_display.hpp>
 
-// #define GRADIENT " .'`^\",:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$"
 
 using bmp_reader::println;
 using bmp_reader::eprintln;
@@ -24,7 +23,7 @@ int main(int argc, char** argv) {
     BmpDisplay display;
     
     display.openBMP(cli_args.bmp_file_path.string());
-    display.displayBMP();
+    display.displayBMP(378, 111);
     display.closeBMP();
 
     return 0;

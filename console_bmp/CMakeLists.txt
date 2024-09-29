@@ -5,4 +5,5 @@ add_executable(console_bmp
     src/bmp_display.cpp
 )
 target_include_directories(console_bmp PUBLIC include)
-target_link_libraries(console_bmp PUBLIC bmp_reader argparse)
+target_include_directories(console_bmp PRIVATE ${SFML_INCLUDE_DIRECTORIES})
+target_link_libraries(console_bmp PUBLIC bmp_reader argparse sfml-graphics)

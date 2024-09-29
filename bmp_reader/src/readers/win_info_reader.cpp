@@ -87,7 +87,7 @@ auto WinInfoReader::read(std::istream& is) -> images::Rgba8 {
         pixel_reader->read_row_rgba(BitView(row_data.data()), abs_width, save_to);
     }
     
-    return images::Rgba8(std::move(final_pixels), m_header.width_pixels, m_header.height_pixels);
+    return images::Rgba8(std::move(final_pixels), m_header.width_pixels, -m_header.height_pixels);
 }
 
 
