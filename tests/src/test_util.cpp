@@ -25,8 +25,16 @@ void push_half_byte(std::vector<uint8_t>& push_into, bool& is_last_elem_half_byt
 }
 
 void read_word_big_endian(std::span<const char> word, std::vector<uint8_t>& push_into, bool& is_last_elem_half_byte) {
-    for (auto it = word.end() - 1; it >= word.begin(); it--) {
+    auto it = word.end() - 1;
+
+    while (it >= word.begin()) {
+
         push_half_byte(push_into, is_last_elem_half_byte, symbol_to_hex_val(*it));
+
+        if (it > word.begin())
+            it--;
+        else
+            break;
     }
 }
 
