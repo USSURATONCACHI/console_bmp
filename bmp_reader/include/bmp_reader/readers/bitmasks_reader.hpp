@@ -16,8 +16,8 @@ public:
 
     virtual auto read_bitmasks(std::istream& is) -> ColorBitmasks;
 
-    static auto read_bgr_bitmasks(std::istream& is) -> ColorBitmasks;
-    static auto read_bgra_bitmasks(std::istream& is) -> ColorBitmasks;
+    static auto read_rgb_bitmasks(std::istream& is) -> ColorBitmasks;
+    static auto read_rgba_bitmasks(std::istream& is) -> ColorBitmasks;
     static auto get_default_bitmasks(size_t bits_per_channel) -> ColorBitmasks;
 
 private:

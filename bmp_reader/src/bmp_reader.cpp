@@ -97,18 +97,18 @@ auto BmpReader::read_bmp(std::istream& is, bool show_info) -> Rgba8Image {
 
     // Read DIB header size
     uint32_t dib_header_size = 0;
-    size_t dib_header_start = is.tellg();
     is.read(reinterpret_cast<char*>(&dib_header_size), sizeof(dib_header_size));
 
     // Read DIB header
     dib_headers::HeaderParser& parser = get_appropriate_parser(static_cast<size_t>(dib_header_size), info.file_type);
     std::unique_ptr<dib_headers::HeaderBase> header = parser.parse(is);
+    header->header_size = dib_header_size;
 
     if (show_info)
         header->print_info();
 
     // Jump to start of data
-    is.seekg(dib_header_start + dib_header_size);
+    // is.seekg(dib_header_start + dib_header_size);
 
     dib_headers::OS21X* os21x_header      = dynamic_cast<dib_headers::OS21X*>(header.get());
     dib_headers::WinCore* win_core_header = dynamic_cast<dib_headers::WinCore*>(header.get());

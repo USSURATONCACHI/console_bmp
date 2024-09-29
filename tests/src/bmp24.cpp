@@ -3,9 +3,7 @@
 #include <gtest/gtest.h>
 
 #include <bmp_reader/bmp_reader.hpp>
-#include <bmp_reader/util/print.hpp>
 
-#include <bmp_reader/pixels.hpp>
 #include "test_util.hpp"
 
 using namespace bmp_reader;
@@ -44,7 +42,6 @@ TEST(Bmp24, Example1) {
     
     std::vector<uint8_t> byte_data = read_string_as_hex(data);
     VectorStream<uint8_t> stream(byte_data);
-    // std::istream stream(&buffer);
 
     BmpReader reader;
     reader.add_default_parsers();

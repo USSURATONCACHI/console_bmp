@@ -38,7 +38,12 @@ auto WinInfo::actual_data_size(BmpFileInfo info) const -> size_t {
 }
 auto WinInfo::channels_count() const -> size_t {
     switch (compression_method) {
-        case CompressionMethod::BITFIELDS:      return 3;
+        case CompressionMethod::BITFIELDS:      
+            if (header_size >= WinInfo::SizeV3Bytes)
+                return 4;
+            else
+                return 3;
+        
         case CompressionMethod::ALPHABITFIELDS: return 4;
         case CompressionMethod::CMYK:           return 4;
         case CompressionMethod::RGB:            return 3;

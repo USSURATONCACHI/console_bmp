@@ -28,6 +28,7 @@ auto CompressionMethod_to_string(CompressionMethod c) -> const char*;
 
 // BITMAPINFOHEADER
 struct WinInfo : public HeaderBase {
+    uint32_t header_size;
     int32_t width_pixels;
     int32_t height_pixels;
     int16_t num_color_planes; // must be 1 ?
@@ -49,6 +50,12 @@ struct WinInfo : public HeaderBase {
     virtual auto actual_data_size(BmpFileInfo info) const -> size_t;
 
     virtual void print_info() const;
+
+    static const size_t SizeV1Bytes = 40;
+    static const size_t SizeV2Bytes = 52;
+    static const size_t SizeV3Bytes = 56;
+    static const size_t SizeV4Bytes = 108;
+    static const size_t SizeV5Bytes = 124;
 };
 
 

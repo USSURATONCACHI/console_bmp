@@ -12,29 +12,32 @@ BitmasksReader::BitmasksReader(const dib_headers::WinInfo& header)
 auto BitmasksReader::read_bitmasks(std::istream& is) -> ColorBitmasks {
     switch (m_header.compression_method) {
         case dib_headers::CompressionMethod::BITFIELDS:
-            return read_bgr_bitmasks(is);
+            if (m_header.header_size >= dib_headers::WinInfo::SizeV3Bytes)
+                return read_rgba_bitmasks(is);
+            else
+                return read_rgb_bitmasks(is);
 
         case dib_headers::CompressionMethod::ALPHABITFIELDS:
-            return read_bgra_bitmasks(is);
+            return read_rgba_bitmasks(is);
 
         default:
             return get_default_bitmasks(m_header.bits_per_channel());
     }
 }
 
-auto BitmasksReader::read_bgr_bitmasks(std::istream& is) -> ColorBitmasks {
+auto BitmasksReader::read_rgb_bitmasks(std::istream& is) -> ColorBitmasks {
     ColorBitmasks bitmasks { 0, 0, 0, 0 };
-    is.read(reinterpret_cast<char*>(&bitmasks.b), sizeof(bitmasks.b));
-    is.read(reinterpret_cast<char*>(&bitmasks.g), sizeof(bitmasks.g));
     is.read(reinterpret_cast<char*>(&bitmasks.r), sizeof(bitmasks.r));
+    is.read(reinterpret_cast<char*>(&bitmasks.g), sizeof(bitmasks.g));
+    is.read(reinterpret_cast<char*>(&bitmasks.b), sizeof(bitmasks.b));
     return bitmasks;
 }
 
-auto BitmasksReader::read_bgra_bitmasks(std::istream& is) -> ColorBitmasks {
+auto BitmasksReader::read_rgba_bitmasks(std::istream& is) -> ColorBitmasks {
     ColorBitmasks bitmasks { 0, 0, 0, 0 };
-    is.read(reinterpret_cast<char*>(&bitmasks.b), sizeof(bitmasks.b));
-    is.read(reinterpret_cast<char*>(&bitmasks.g), sizeof(bitmasks.g));
     is.read(reinterpret_cast<char*>(&bitmasks.r), sizeof(bitmasks.r));
+    is.read(reinterpret_cast<char*>(&bitmasks.g), sizeof(bitmasks.g));
+    is.read(reinterpret_cast<char*>(&bitmasks.b), sizeof(bitmasks.b));
     is.read(reinterpret_cast<char*>(&bitmasks.a), sizeof(bitmasks.a));
     return bitmasks;
 }
