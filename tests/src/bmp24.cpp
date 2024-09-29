@@ -51,10 +51,10 @@ TEST(Bmp24, Example1) {
 
     auto image = reader.read_bmp(stream, true);
     
-    bmp_reader::Rgba8Pixel red   { .r = 255, .g = 0,   .b = 0,   .a = 0 };
-    bmp_reader::Rgba8Pixel green { .r = 0,   .g = 255, .b = 0,   .a = 0 };
-    bmp_reader::Rgba8Pixel blue  { .r = 0,   .g = 0,   .b = 255, .a = 0 };
-    bmp_reader::Rgba8Pixel white { .r = 255, .g = 255, .b = 255, .a = 0 };
+    bmp_reader::Rgba8Pixel red   { .r = 255, .g = 0,   .b = 0,   .a = 255 };
+    bmp_reader::Rgba8Pixel green { .r = 0,   .g = 255, .b = 0,   .a = 255 };
+    bmp_reader::Rgba8Pixel blue  { .r = 0,   .g = 0,   .b = 255, .a = 255 };
+    bmp_reader::Rgba8Pixel white { .r = 255, .g = 255, .b = 255, .a = 255 };
 
     EXPECT_EQ(image.get_rgba8_lossy(0, 0),  blue);
     EXPECT_EQ(image.get_rgba8_lossy(1, 0),  green);
