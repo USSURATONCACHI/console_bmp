@@ -1,6 +1,7 @@
 #pragma once
 
 #include <istream>
+#include <cstdint>
 
 #include <bmp_reader/dib_headers/header_base.hpp>
 #include <bmp_reader/bmp_file_info.hpp>
@@ -21,7 +22,7 @@ public:
     virtual const dib_headers::HeaderBase& get_bmp_header() const = 0;
 
 protected:
-    auto read_row_by_row(std::istream& is, ssize_t width, ssize_t height, PixelReaderBase& pixel_reader) -> Rgba8Image;
+    auto read_row_by_row(std::istream& is, int64_t width, int64_t height, PixelReaderBase& pixel_reader) -> Rgba8Image;
 
 protected:
     BmpFileInfo m_file_info;

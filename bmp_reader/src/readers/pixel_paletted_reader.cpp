@@ -1,5 +1,6 @@
 #include <bmp_reader/readers/pixel_paletted_reader.hpp>
 #include <bmp_reader/pixels.hpp>
+#include <cstdint>
 
 namespace bmp_reader {
 namespace readers {

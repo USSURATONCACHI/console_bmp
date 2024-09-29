@@ -2,6 +2,7 @@
 
 
 #include <cstddef>
+#include <cstdint>
 #include <cstdlib>
 #include <stdexcept>
 #include <vector>
@@ -14,11 +15,11 @@ namespace bmp_reader {
 class Rgba8Image {
 protected:
     std::vector<Rgba8Pixel> m_data;
-    ssize_t m_width;    // Negative size = mirrored
-    ssize_t m_height;
+    int64_t m_width;    // Negative size = mirrored
+    int64_t m_height;
 
 public:
-    Rgba8Image(std::vector<Rgba8Pixel>&& data, ssize_t width, ssize_t height)
+    Rgba8Image(std::vector<Rgba8Pixel>&& data, int64_t width, int64_t height)
         : m_data(std::move(data)), m_width(width), m_height(height)
     {
         size_t abs_size = std::abs(width) * std::abs(height);
@@ -26,7 +27,7 @@ public:
             throw std::invalid_argument("size of data array does not match");
     }
 
-    Rgba8Image(std::vector<uint8_t>&& data, ssize_t width, ssize_t height) 
+    Rgba8Image(std::vector<uint8_t>&& data, int64_t width, int64_t height) 
         : Rgba8Image(reinterpret_cast<std::vector<Rgba8Pixel>&&>(std::move(data)), width, height)
     {
         size_t abs_size = std::abs(width) * std::abs(height);
