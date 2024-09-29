@@ -1,14 +1,14 @@
 #include <cstdint>
 #include <gtest/gtest.h>
 
-#include <bmp_reader/bit_view.hpp>
+#include <bmp_reader/util/bit_view.hpp>
 
 using namespace bmp_reader;
 
 TEST(BitView, AlignedRead) {
     uint8_t data[] = { 0x10, 0x32, 0x54, 0x76 };
     
-    BitView view { .data_ptr = data, .bits_offset = 0 };
+    BitView view(data);
 
     EXPECT_EQ(view.read_as<uint8_t>(0), 0x10);
     EXPECT_EQ(view.read_as<uint8_t>(8), 0x32);
@@ -22,7 +22,7 @@ TEST(BitView, AlignedRead) {
 TEST(BitView, ShiftedRead1) {
     uint8_t data[] = { 0x10, 0x32, 0x54, 0x76 };
     
-    BitView view { .data_ptr = data, .bits_offset = 4 };
+    BitView view(data, 4);
 
     EXPECT_EQ(view.read_as<uint8_t>(0), 0x21);
     EXPECT_EQ(view.read_as<uint8_t>(8), 0x43);
@@ -37,7 +37,7 @@ TEST(BitView, ShiftedRead1) {
 TEST(BitView, ShiftedRead2) {
     uint8_t data[] = { 0x10, 0x32, 0x54, 0x76 };
     
-    BitView view { .data_ptr = data, .bits_offset = 2 };
+    BitView view(data, 2);
 
     EXPECT_EQ(view.read_as<uint8_t>(2 + 0), 0x21);
     EXPECT_EQ(view.read_as<uint8_t>(2 + 8), 0x43);
@@ -53,7 +53,7 @@ TEST(BitView, ShiftedRead2) {
 TEST(BitView, ShiftedRead3) {
     uint8_t data[] = { 0b00010000, 0b00110010, 0b01010100, 0b01110110 }; // 0b01110110010101000011001000010000
     
-    BitView view { .data_ptr = data, .bits_offset = 0 };
+    BitView view(data);
 
     EXPECT_EQ(view.read_as<uint16_t>(3),  0b10000110'01000010);
     EXPECT_EQ(view.read_as<uint16_t>(5),  0b10100001'10010000);
@@ -70,7 +70,7 @@ TEST(BitView, ShiftedRead3) {
 TEST(BitView, ShiftedWrite) {
     uint64_t data = 0x01234567'89ABCDEF;
     
-    BitView view { .data_ptr = reinterpret_cast<uint8_t*>(&data), .bits_offset = 0 };
+    BitView view(&data);
 
     view.write_as(12, static_cast<uint16_t>(0xCBA9));
 
@@ -82,7 +82,7 @@ TEST(BitView, ShiftedWrite) {
 TEST(BitView, ShiftedWrite2) {
     uint64_t data = 0x0123456789ABCDEF;
     
-    BitView view { .data_ptr = reinterpret_cast<uint8_t*>(&data), .bits_offset = 0 };
+    BitView view(&data);
 
     view.write_as(27, static_cast<uint16_t>(0xCBA9));
 
