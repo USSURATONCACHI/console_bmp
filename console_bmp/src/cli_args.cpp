@@ -30,11 +30,11 @@ auto parse_args(int argc, char** argv) -> AppArguments {
     return AppArguments {
         .info = parser.get<bool>("--info"),
 
-        .gradient    = parser.get<bool>("--gradient"),
-        .no_raw_text = parser.get<bool>("--no-raw-text"),
-        .auto_width  = parser.get<bool>("--auto-width"),
+        .gradient     = parser.get<bool>("--gradient"),
+        .no_raw_text  = parser.get<bool>("--no-raw-text"),
+        .no_auto_size = parser.get<bool>("--no-auto-size"),
 #ifdef CONSOLE_BMP_SFML_WINDOW
-        .out_window  = parser.get<bool>("--window"),
+        .out_window   = parser.get<bool>("--window"),
 #endif
 
         .width  = static_cast<size_t>(width),
@@ -52,7 +52,7 @@ static void fill_parser(argparse::ArgumentParser& program) {
     add_flag(program, "--info", "-i","Show information about image");
     add_flag(program, "--gradient", "-g","Use more than two symbols to represent brightness");
     add_flag(program, "--no-raw-text", "Do not print image to stdout");
-    add_flag(program, "--auto-width", "-a",  "Scale an image to take width of the terminal");
+    add_flag(program, "--no-auto-size", "-a",  "Do not restrict image by terminal size");
 #ifdef CONSOLE_BMP_SFML_WINDOW
     add_flag(program, "--window",      "Open a window to display an image there");
 #endif

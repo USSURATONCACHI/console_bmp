@@ -4,3 +4,5 @@ build/
 .venv/
 imgdump.bin
 images_gen/
+.vs/
+CMakeSettings.json

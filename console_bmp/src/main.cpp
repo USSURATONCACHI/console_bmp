@@ -23,10 +23,13 @@ int main(int argc, char** argv) {
     
     display.openBMP(cli_args.bmp_file_path.string());
 
-    if (cli_args.auto_width) {
+    if (!cli_args.no_auto_size) {
         auto [w, h] = get_terminal_size();
-        cli_args.width = w;
-        cli_args.height = h;
+
+        if (cli_args.width == 0)
+            cli_args.width = w;
+        if (cli_args.height == 0)
+            cli_args.height = h;
     }
 
     if (!cli_args.no_raw_text)

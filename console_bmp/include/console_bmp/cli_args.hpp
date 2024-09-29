@@ -10,7 +10,7 @@ struct AppArguments {
     bool info;
     bool gradient;
     bool no_raw_text;
-    bool auto_width;
+    bool no_auto_size;
     bool out_window;
     
     size_t width;
