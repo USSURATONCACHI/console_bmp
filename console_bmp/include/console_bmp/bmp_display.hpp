@@ -10,9 +10,7 @@ namespace console_bmp {
 
 class BmpDisplay {
 public:
-    BmpDisplay();
-
-    void setShowInfo(bool doShow);
+    BmpDisplay(bool use_gradient, bool show_info);
 
     void openBMP(const std::string& fileName);
     
@@ -28,6 +26,7 @@ protected:
 protected:
     std::optional<bmp_reader::Rgba8Image> m_image;
     bool m_show_info;
+    bool m_use_gradient;
 };
 
 

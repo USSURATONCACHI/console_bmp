@@ -9,9 +9,8 @@ using bmp_reader::eprintln;
 using namespace console_bmp;
 
 int main(int argc, char** argv) {
-    AppArguments cli_args; 
-    
     // Parse args
+    AppArguments cli_args; 
     try {
         cli_args = parse_args(argc, argv);
     } catch (const std::exception& e) {
@@ -19,9 +18,9 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    BmpDisplay display;
+    // Do the rest
+    BmpDisplay display(cli_args.gradient, cli_args.info);
     
-    display.setShowInfo(cli_args.info);
     display.openBMP(cli_args.bmp_file_path.string());
 
     if (cli_args.auto_width) {
@@ -33,8 +32,11 @@ int main(int argc, char** argv) {
     if (!cli_args.no_raw_text)
         display.displayBMP(cli_args.width, cli_args.height);
 
+
+#ifdef CONSOLE_BMP_SFML_WINDOW
     if (cli_args.out_window)
         display.displayBMPInWindow();
+#endif
 
     display.closeBMP();
 

@@ -8,6 +8,7 @@ namespace console_bmp {
 
 struct AppArguments {
     bool info;
+    bool gradient;
     bool no_raw_text;
     bool auto_width;
     bool out_window;

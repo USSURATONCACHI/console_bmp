@@ -1,8 +1,8 @@
-#include <SFML/Window/VideoMode.hpp>
-#include <cmath>
 #include <console_bmp/bmp_display.hpp>
 
 #include <fstream>
+#include <tuple>
+#include <cmath>
 
 #include <bmp_reader/rgba8_image.hpp>
 #include <bmp_reader/util/print.hpp>
@@ -11,18 +11,13 @@
 
 using bmp_reader::print;
 using bmp_reader::println;
-using bmp_reader::eprintln;
 
 namespace console_bmp {
 
 
-BmpDisplay::BmpDisplay()
-    : m_image({}), m_show_info(false)
+BmpDisplay::BmpDisplay(bool use_gradient, bool show_info)
+    : m_image({}), m_show_info(show_info), m_use_gradient(use_gradient)
 {}
-
-void BmpDisplay::setShowInfo(bool do_show) {
-    m_show_info = do_show;
-}
 
 void BmpDisplay::openBMP(const std::string& fileName) {
     std::ifstream ifs(fileName, std::ios::in | std::ios::binary);
@@ -38,25 +33,32 @@ void BmpDisplay::openBMP(const std::string& fileName) {
     m_image = image;
 }
 
-void BmpDisplay::displayBMP(size_t max_width, size_t max_height) {
-    if (!m_image.has_value())
-        throw std::runtime_error("No image to display");
-
+static auto get_shown_size(size_t w, size_t h, size_t max_width, size_t max_height) -> std::pair<size_t, size_t> {
     double scaling = 1.0;
 
     if (max_width != 0) {
-        double scaling_w = static_cast<double>(m_image->width()) / static_cast<double>(max_width);
+        double scaling_w = static_cast<double>(w) / static_cast<double>(max_width);
         if (scaling_w > scaling)
             scaling = scaling_w;
     }
     if (max_height != 0) {
-        double scaling_h = static_cast<double>(m_image->height()) / static_cast<double>(max_height);
+        double scaling_h = static_cast<double>(h) / static_cast<double>(max_height);
         if (scaling_h > scaling)
             scaling = scaling_h;
     }
 
-    size_t shown_width = static_cast<size_t>(std::round(static_cast<double>(m_image->width()) / scaling));
-    size_t shown_height = static_cast<size_t>(std::round(static_cast<double>(m_image->height()) / scaling));
+    size_t shown_width = static_cast<size_t>(std::round(static_cast<double>(w) / scaling));
+    size_t shown_height = static_cast<size_t>(std::round(static_cast<double>(h) / scaling));
+
+    return {shown_width, shown_height};
+}
+
+void BmpDisplay::displayBMP(size_t max_width, size_t max_height) {
+    if (!m_image.has_value())
+        throw std::runtime_error("No image to display");
+
+    const auto [shown_width, shown_height] = 
+        get_shown_size(m_image->width(), m_image->height(), max_width, max_height);
 
     println("");
     const std::string gradient = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
@@ -69,7 +71,14 @@ void BmpDisplay::displayBMP(size_t max_width, size_t max_height) {
             size_t end_y = m_image->height() * (y + 1) / shown_height;
 
             auto [sum, count] = sum_pixels(start_x, start_y, end_x, end_y);
-            size_t char_index = gradient.length() - (sum * gradient.length() / count / 256) - 1;
+            size_t char_index;
+
+            if (m_use_gradient) {
+                char_index = gradient.length() - (sum * gradient.length() / count / 256) - 1;
+            } else {
+                char_index = (sum * 4 / count / 256) == 0 ? (gradient.length() - 1) : 0;
+            }
+
             print("{}", gradient.at(char_index));
         }
         print("\n");
