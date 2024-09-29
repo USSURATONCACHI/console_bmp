@@ -12,7 +12,7 @@ static void add_flag(argparse::ArgumentParser& program, const char* name, const 
 static void add_flag(argparse::ArgumentParser& program, const char* name, const char* description);
 
 auto parse_args(int argc, char** argv) -> AppArguments {
-    argparse::ArgumentParser parser(argv[0], "0.1.0", argparse::default_arguments::help, false);
+    argparse::ArgumentParser parser(argv[0], "1.1.0", argparse::default_arguments::help, false);
     fill_parser(parser);
 
     parser.parse_args(argc, argv);

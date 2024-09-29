@@ -2,16 +2,19 @@
 
 Its a cross-platform CLI viewer for .bmp . Supports all uncompressed BMP types.
 
-- `sample_images $ console_bmp bmp_16x48_px.bmp`
+Entry point is `console_bmp/src/main.cpp`. The program is `build/bin/Debug/console_cpp.exe` (if MSBuild) or `build/bin/console_bmp.exe` (with other toolchains).
+
+- `$ console_bmp sample_images/black_and_white_1_16x48_px.bmp`
     ![Simplest usage](readme_images/simplest_usage.png)
 
-- `sample_images $ console_bmp --auto-width --gradient blackbuck.bmp`:
+- `$ console_bmp --gradient sample_images/blackbuck.bmp`:
     ![Blackbuck](readme_images/blabkbuck_gradient.png)
 
 ## Building
 
 Build is done with CMake:
 ```bash
+$ git submodule update --init --recursive
 $ cmake -S . -B build
 $ cmake --build build --parallel
 $ cd build/bin # Might be different with MSBuild
@@ -28,6 +31,12 @@ It is specified like this before build:
 ```bash
 $ cmake -S . -B build -DSFML_WINDOW_DISPLAY=ON
 ```
+
+## Layout
+
+- `console_bmp/` - the CLI app itself.
+- `bmp_reader/` - library that abstract away parsing BMP files. Reads files via `std::istream&`.
+- `tests/` - module that produces `run_tests.exe` to test correctness of the library.
 
 ## Usage
 
