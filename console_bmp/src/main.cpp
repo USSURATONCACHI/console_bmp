@@ -1,23 +1,11 @@
-// #include <cstdint>
-#include <iostream>
-// #include <memory>
-// #include <string>
-// #include <filesystem>
-// #include <fstream>
-// #include <cstring>
-
-#include <bmp_reader/print.hpp>
-// #include <bmp_reader/bmp_reader.hpp>
-// #include <bmp_reader/images/image.hpp>
-
+#include <bmp_reader/util/print.hpp>
 #include <console_bmp/cli_args.hpp>
+#include <console_bmp/bmp_display.hpp>
 
 // #define GRADIENT " .'`^\",:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$"
 
 using bmp_reader::println;
-// using bmp_reader::images::Image;
-// using bmp_reader::images::Rgba8Pixel;
-// using bmp_reader::BmpReader;
+using bmp_reader::eprintln;
 
 using namespace console_bmp;
 
@@ -28,12 +16,16 @@ int main(int argc, char** argv) {
     try {
         cli_args = parse_args(argc, argv);
     } catch (const std::exception& e) {
-        std::cerr << "Failed to parse arguments." << std::endl;
-        std::cerr << e.what() << std::endl;
+        eprintln("Failed to parse arguments: {}", e.what());
         return 1;
     }
 
     println("Skibidi sigma!");
+    BmpDisplay display;
+    
+    display.openBMP(cli_args.bmp_file_path.string());
+    display.displayBMP();
+    display.closeBMP();
 
     return 0;
 }
