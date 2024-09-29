@@ -1,6 +1,7 @@
 #include <bmp_reader/util/print.hpp>
 #include <console_bmp/cli_args.hpp>
 #include <console_bmp/bmp_display.hpp>
+#include <console_bmp/get_terminal_size.hpp>
 
 
 using bmp_reader::eprintln;
@@ -22,6 +23,12 @@ int main(int argc, char** argv) {
     
     display.setShowInfo(cli_args.info);
     display.openBMP(cli_args.bmp_file_path.string());
+
+    if (cli_args.auto_width) {
+        auto [w, h] = get_terminal_size();
+        cli_args.width = w;
+        cli_args.height = h;
+    }
 
     if (!cli_args.no_raw_text)
         display.displayBMP(cli_args.width, cli_args.height);
