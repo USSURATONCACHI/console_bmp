@@ -36,6 +36,8 @@ public:
     virtual ~Rgba8() {};
 
     Rgba8Pixel* data() { return m_data.data(); }
+    bool flipped_w() const { return m_width < 0; }
+    bool flipped_h() const { return m_height < 0; }
 
     virtual size_t width() const  { return std::abs(m_width); }
     virtual size_t height() const { return std::abs(m_height); }

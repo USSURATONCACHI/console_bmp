@@ -1,3 +1,4 @@
+#include "bmp_reader/dib_headers/win_info.hpp"
 #include <bmp_reader/bmp_reader.hpp>
 
 #include <cstddef>
@@ -74,7 +75,7 @@ auto BmpReader::get_appropriate_parser(size_t header_size, BmpFileType type) -> 
     );
 }
 
-auto BmpReader::read_bmp(std::istream& is) -> images::Rgba8 {
+auto BmpReader::read_bmp(std::istream& is, bool show_info) -> images::Rgba8 {
     // Read file header
     BmpFileInfo info = read_bmp_file_header(is);
 
@@ -88,6 +89,15 @@ auto BmpReader::read_bmp(std::istream& is) -> images::Rgba8 {
 
     if (header->type() == typeid(dib_headers::WinInfo)) {
         dib_headers::WinInfo& header_downcast = *dynamic_cast<dib_headers::WinInfo*>(header.get());
+
+        if (show_info) {
+            println("Image size: {} {}", header_downcast.width_pixels, header_downcast.height_pixels);
+            println("Bits per pixel: {}", header_downcast.num_bits_per_pixel);
+            println("Compression method: {}", dib_headers::CompressionMethod_to_string(header_downcast.compression_method));
+            println("Raw data size: {}", header_downcast.raw_data_size);
+            println("Num colors in palette: {}", header_downcast.num_colors_in_pallete);
+            println("Important colors: {}", header_downcast.num_important_colors);
+        }
         
         readers::WinInfoReader reader(header_downcast, info);
         images::Rgba8 image = reader.read(is);
