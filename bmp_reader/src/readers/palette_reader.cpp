@@ -1,15 +1,16 @@
-#include <bmp_reader/palette_reader.hpp>
+#include <bmp_reader/readers/palette_reader.hpp>
 
-#include <bmp_reader/images/pixels.hpp>
+#include <bmp_reader/pixels.hpp>
 
 namespace bmp_reader {
+namespace readers {
 
 PaletteReader::PaletteReader(size_t channels_count) 
     : m_channels_count(channels_count)
 {}
 
-auto PaletteReader::read_bgra(std::istream& is, size_t entries_count) -> BgraPalette {
-    std::vector<images::Bgra8Pixel> palette_bgra(entries_count);
+auto PaletteReader::read_palette_bgra(std::istream& is, size_t entries_count) -> BgraPalette {
+    std::vector<Bgra8Pixel> palette_bgra(entries_count);
     is.read(reinterpret_cast<char*>(palette_bgra.data()), palette_bgra.size() * sizeof(palette_bgra[0]));
 
     if (m_channels_count < 4) {
@@ -24,16 +25,21 @@ auto PaletteReader::read_bgra(std::istream& is, size_t entries_count) -> BgraPal
     return palette_bgra;
 }
 auto PaletteReader::bgra_palette_to_rgba(BgraPalette&& bgra) -> RgbaPalette {
-    for (images::Bgra8Pixel& pixel : bgra) {
-        images::Rgba8Pixel rgba_pix = images::bgra_to_rgba(pixel);
+    for (Bgra8Pixel& pixel : bgra) {
+        Rgba8Pixel rgba_pix = bgra_to_rgba(pixel);
 
-        static_assert(sizeof(images::Bgra8Pixel) == sizeof(images::Rgba8Pixel));
-        auto ptr = reinterpret_cast<images::Rgba8Pixel*>(&pixel);
+        static_assert(sizeof(Bgra8Pixel) == sizeof(Rgba8Pixel));
+        auto ptr = reinterpret_cast<Rgba8Pixel*>(&pixel);
         *ptr = rgba_pix;
     }
     
-    return reinterpret_cast<std::vector<images::Rgba8Pixel>&>(bgra);
+    return reinterpret_cast<std::vector<Rgba8Pixel>&>(bgra);
+}
+
+auto PaletteReader::read_palette_rgba(std::istream& is, size_t entries_count) -> RgbaPalette {
+    return bgra_palette_to_rgba(read_palette_bgra(is, entries_count));
 }
 
 
+} // namespace readers
 } // namespace bmp_reader

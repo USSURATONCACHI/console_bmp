@@ -1,26 +1,26 @@
 #pragma once
 
-#include <bmp_reader/pixel_reader/pixel_reader.hpp>
+#include <bmp_reader/readers/pixel_reader_base.hpp>
 #include <bmp_reader/color_bitmasks.hpp>
-#include <bmp_reader/images/pixels.hpp>
+#include <bmp_reader/pixels.hpp>
 
 
 namespace bmp_reader {
-namespace pixel_reader {
+namespace readers {
 
 
-class PixelBitmaskedReader : public PixelReader {
+class PixelBitmaskedReader : public PixelReaderBase {
 public:
     PixelBitmaskedReader(ColorBitmasks masks, size_t bits_per_pixel, size_t channels_count);
     virtual ~PixelBitmaskedReader() {}
 
-    virtual auto read_rgba(BitView bv) -> images::Rgba8Pixel;
+    virtual auto read_pixel_rgba(BitView bv) -> Rgba8Pixel;
 
-private:
+protected:
     ColorBitmasks m_bitmasks;
     size_t m_channels_count;
 };
 
 
-} // namespace pixel_reader
+} // namespace readers
 } // namespace bmp_reader

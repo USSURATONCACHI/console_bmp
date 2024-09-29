@@ -22,6 +22,7 @@ struct OS22X : public WinInfo {
     uint32_t halftoning_param_2;
 
     OS22X(WinInfo base) : WinInfo(base) {}
+    
     virtual const std::type_info& type() const { return typeid(OS22X); }
 };
 

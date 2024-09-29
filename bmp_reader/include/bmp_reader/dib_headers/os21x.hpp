@@ -17,6 +17,10 @@ struct OS21X : public HeaderBase {
     uint16_t num_bits_per_pixel;
 
     virtual const std::type_info& type() const { return typeid(OS21X); }
+    virtual auto data_row_size() const -> size_t;
+    virtual auto min_data_size() const -> size_t;
+    virtual auto get_bits_per_pixel() const -> size_t;
+    virtual auto channels_count() const -> size_t;
 };
 
 } // namespace dib_headers

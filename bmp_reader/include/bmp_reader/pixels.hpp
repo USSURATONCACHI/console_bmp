@@ -3,7 +3,6 @@
 #include <cstdint>
 
 namespace bmp_reader {
-namespace images {
 
 struct Rgba8Pixel {
     uint8_t r, g, b, a;
@@ -37,5 +36,4 @@ static inline auto bgra_to_rgba(Bgra8Pixel p) -> Rgba8Pixel {
     };
 }
 
-} // namespace images
 } // namespace bmp_reader

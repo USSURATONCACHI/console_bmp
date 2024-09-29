@@ -4,10 +4,9 @@
 #include <memory>
 #include <vector>
 
-#include <bmp_reader/images/image.hpp>
 #include <bmp_reader/bmp_file_info.hpp>
 #include <bmp_reader/dib_headers/header_parser.hpp>
-#include <bmp_reader/images/rgba8.hpp>
+#include <bmp_reader/rgba8_image.hpp>
 
 namespace bmp_reader {
 

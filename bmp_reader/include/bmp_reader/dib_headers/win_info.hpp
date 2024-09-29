@@ -40,10 +40,12 @@ struct WinInfo : public HeaderBase {
     uint32_t num_important_colors;
 
     virtual const std::type_info& type() const { return typeid(WinInfo); }
-    virtual auto channels_count() const -> size_t;
     virtual auto bits_per_channel() const -> size_t;
     virtual auto data_row_size() const -> size_t;
     virtual auto min_data_size() const -> size_t;
+    virtual auto get_bits_per_pixel() const -> size_t;
+    virtual auto channels_count() const -> size_t;
+
     virtual auto actual_data_size(BmpFileInfo info) const -> size_t;
 };
 

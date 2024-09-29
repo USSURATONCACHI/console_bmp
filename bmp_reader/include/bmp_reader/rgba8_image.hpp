@@ -1,23 +1,24 @@
 #pragma once
 
-#include <bmp_reader/images/image.hpp>
 
+#include <cstddef>
 #include <cstdlib>
 #include <stdexcept>
 #include <vector>
 
+#include <bmp_reader/pixels.hpp>
+
 namespace bmp_reader {
-namespace images {
 
 
-class Rgba8 : public Image {
+class Rgba8Image {
 protected:
     std::vector<Rgba8Pixel> m_data;
     ssize_t m_width;    // Negative size = mirrored
     ssize_t m_height;
 
 public:
-    Rgba8(std::vector<Rgba8Pixel>&& data, ssize_t width, ssize_t height)
+    Rgba8Image(std::vector<Rgba8Pixel>&& data, ssize_t width, ssize_t height)
         : m_data(std::move(data)), m_width(width), m_height(height)
     {
         size_t abs_size = std::abs(width) * std::abs(height);
@@ -25,15 +26,15 @@ public:
             throw std::invalid_argument("size of data array does not match");
     }
 
-    Rgba8(std::vector<uint8_t>&& data, ssize_t width, ssize_t height) 
-        : Rgba8(reinterpret_cast<std::vector<Rgba8Pixel>&&>(std::move(data)), width, height)
+    Rgba8Image(std::vector<uint8_t>&& data, ssize_t width, ssize_t height) 
+        : Rgba8Image(reinterpret_cast<std::vector<Rgba8Pixel>&&>(std::move(data)), width, height)
     {
         size_t abs_size = std::abs(width) * std::abs(height);
         if (abs_size * 4 != m_data.size())
             throw std::invalid_argument("size of data array does not match (1)");
     }
 
-    virtual ~Rgba8() {};
+    virtual ~Rgba8Image() {};
 
     Rgba8Pixel* data() { return m_data.data(); }
     bool flipped_w() const { return m_width < 0; }
@@ -56,5 +57,5 @@ public:
     }
 };
 
-} // namespace images
+
 } // namespace bmp_reader
