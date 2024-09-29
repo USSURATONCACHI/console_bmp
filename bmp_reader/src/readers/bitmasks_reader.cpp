@@ -12,7 +12,7 @@ BitmasksReader::BitmasksReader(const dib_headers::WinInfo& header)
 auto BitmasksReader::read_bitmasks(std::istream& is) -> ColorBitmasks {
     switch (m_header.compression_method) {
         case dib_headers::CompressionMethod::BITFIELDS:
-            if (m_header.header_size >= dib_headers::WinInfo::SizeV3Bytes)
+            if (m_header.header_size >= dib_headers::WinInfo::SizeV3Bytes || m_header.channels_count() > 3)
                 return read_rgba_bitmasks(is);
             else
                 return read_rgb_bitmasks(is);
