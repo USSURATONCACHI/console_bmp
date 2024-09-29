@@ -1,4 +1,3 @@
-#include "bmp_reader/util/print.hpp"
 #include <bmp_reader/readers/bmp_win_info_reader.hpp>
 
 #include <span>
