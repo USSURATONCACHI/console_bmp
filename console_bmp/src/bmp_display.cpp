@@ -43,7 +43,6 @@ void BmpDisplay::displayBMP(size_t max_width, size_t max_height) {
         throw std::runtime_error("No image to display");
 
     double scaling = 1.0;
-    max_width /= 2.0;
 
     if (max_width != 0) {
         double scaling_w = static_cast<double>(m_image->width()) / static_cast<double>(max_width);
