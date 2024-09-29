@@ -10,7 +10,6 @@ struct AppArguments {
     bool info;
     bool no_raw_text;
     bool auto_width;
-    bool out_term_buffer;
     bool out_window;
     
     size_t width;
