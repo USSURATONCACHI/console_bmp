@@ -1,18 +1,13 @@
 #include <SFML/Window/VideoMode.hpp>
-#include <chrono>
 #include <cmath>
 #include <console_bmp/bmp_display.hpp>
 
 #include <fstream>
-#include <stdexcept>
 
-#include <bmp_reader/images/rgba8.hpp>
+#include <bmp_reader/rgba8_image.hpp>
 #include <bmp_reader/util/print.hpp>
 #include <bmp_reader/bmp_reader.hpp>
-#include <thread>
-#include <tuple>
 
-#include <SFML/Graphics.hpp>
 
 using bmp_reader::print;
 using bmp_reader::println;
@@ -38,7 +33,7 @@ void BmpDisplay::openBMP(const std::string& fileName) {
     bmp_reader::BmpReader reader;
     reader.add_default_parsers();
 
-    bmp_reader::images::Rgba8 image = reader.read_bmp(ifs, m_show_info);
+    bmp_reader::Rgba8Image image = reader.read_bmp(ifs, m_show_info);
     
     m_image = image;
 }
@@ -80,40 +75,6 @@ void BmpDisplay::displayBMP(size_t max_width, size_t max_height) {
         }
         print("\n");
     }
-}
-
-void BmpDisplay::displayBMPInWindow() {
-    #ifndef CONSOLE_BMP_SFML_WINDOW
-        eprintln("Displaying BMP in window is not supported");
-    #else
-        sf::Texture texture;
-        texture.create(m_image->width(), m_image->height());
-        texture.update(reinterpret_cast<uint8_t*>(m_image->data()));
-
-        // Create a sprite to display the texture
-        sf::Sprite sprite(texture);
-
-        sprite.setScale(
-            m_image->flipped_w() ? -1.0f : 1.0f, 
-            m_image->flipped_h() ?  -1.0f : 1.0f
-        );
-
-        // Create a window
-        sf::RenderWindow window(sf::VideoMode(m_image->width(), m_image->height()), "RGBA8 Image");
-
-        while (window.isOpen()) {
-            sf::Event event;
-            while (window.pollEvent(event)) {
-                if (event.type == sf::Event::Closed)
-                    window.close();
-            }
-
-            window.clear();
-            window.draw(sprite);
-            window.display();
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
-        }
-    #endif
 }
 
 std::tuple<uint64_t, uint64_t> BmpDisplay::sum_pixels(size_t start_x, size_t start_y, size_t end_x, size_t end_y) {

@@ -11,6 +11,7 @@ add_library(bmp_reader STATIC
     src/readers/bmp_reader_base.cpp
     src/readers/bmp_win_core_reader.cpp
     src/readers/bmp_win_info_reader.cpp
+    src/readers/bmp_os21x_reader.cpp
     src/readers/palette_reader.cpp
     src/readers/pixel_bitmasked_reader.cpp
     src/readers/pixel_paletted_reader.cpp

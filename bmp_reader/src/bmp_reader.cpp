@@ -1,7 +1,9 @@
+#include "bmp_reader/bmp_file_info.hpp"
 #include "bmp_reader/dib_headers/os21x.hpp"
 #include "bmp_reader/dib_headers/os22x.hpp"
 #include "bmp_reader/dib_headers/win_core.hpp"
 #include "bmp_reader/dib_headers/win_info.hpp"
+#include "bmp_reader/rgba8_image.hpp"
 #include <bmp_reader/bmp_reader.hpp>
 
 #include <format>
@@ -71,49 +73,55 @@ auto BmpReader::get_appropriate_parser(size_t header_size, BmpFileType type) -> 
     );
 }
 
-auto BmpReader::read_bmp(std::istream& is, bool show_info) -> images::Rgba8 {
+static auto read_os21x_bmp(std::istream& is, BmpFileInfo info, dib_headers::OS21X& header) -> Rgba8Image {
+    readers::OS21X_Reader reader(info, header);
+    auto image = reader.read(is);
+    return image;
+}
+
+static auto read_win_core_bmp(std::istream& is, BmpFileInfo info, dib_headers::WinCore& header) -> Rgba8Image {
+    readers::WinCoreReader reader(info, header);
+    auto image = reader.read(is);
+    return image;
+}
+
+static auto read_win_info_bmp(std::istream& is, BmpFileInfo info, dib_headers::WinInfo& header) -> Rgba8Image {
+    readers::WinInfoReader reader(info, header);
+    auto image = reader.read(is);
+    return image;
+}
+
+auto BmpReader::read_bmp(std::istream& is, bool show_info) -> Rgba8Image {
     // Read file header
     BmpFileInfo info = read_bmp_file_header(is);
 
     // Read DIB header size
     uint32_t dib_header_size = 0;
+    size_t dib_header_start = is.tellg();
     is.read(reinterpret_cast<char*>(&dib_header_size), sizeof(dib_header_size));
 
     // Read DIB header
     dib_headers::HeaderParser& parser = get_appropriate_parser(static_cast<size_t>(dib_header_size), info.file_type);
     std::unique_ptr<dib_headers::HeaderBase> header = parser.parse(is);
 
+    if (show_info)
+        header->print_info();
+
+    // Jump to start of data
+    is.seekg(dib_header_start + dib_header_size);
+
     dib_headers::OS21X* os21x_header      = dynamic_cast<dib_headers::OS21X*>(header.get());
     dib_headers::WinCore* win_core_header = dynamic_cast<dib_headers::WinCore*>(header.get());
     dib_headers::WinInfo* win_info_header = dynamic_cast<dib_headers::WinInfo*>(header.get());
-    if (os21x_header) {
-        
-    } else if (win_core_header) {
-
-    } else if (win_info_header) {
-        dib_headers::WinInfo& header_downcast = *win_info_header;
-
-        if (show_info) {
-            println("Image size: {} {}", header_downcast.width_pixels, header_downcast.height_pixels);
-            println("Bits per pixel: {}", header_downcast.num_bits_per_pixel);
-            println("Compression method: {}", dib_headers::CompressionMethod_to_string(header_downcast.compression_method));
-            println("Raw data size: {}", header_downcast.raw_data_size);
-            println("Num colors in palette: {}", header_downcast.num_colors_in_pallete);
-            println("Important colors: {}", header_downcast.num_important_colors);
-        }
-        
-        readers::WinInfoReader reader(header_downcast, info);
-        auto image = reader.read(is);
-        return image;
-    } else {
+    
+    if (os21x_header)
+        return read_os21x_bmp(is, info, *os21x_header);
+    else if (win_core_header)
+        return read_win_core_bmp(is, info, *win_core_header);
+    else if (win_info_header)
+        return read_win_info_bmp(is, info, *win_info_header);
+    else
         throw std::runtime_error("Unsupported BMP image kind: " + std::string(header->type().name()));
-    }
-    if (
-        header->type() == typeid(dib_headers::WinInfo) ||
-        header->type() == typeid(dib_headers::OS22X)
-    ) {
-    } else {
-    }
 }
 
 auto BmpReader::read_bmp_file_header(std::istream& is) -> BmpFileInfo {

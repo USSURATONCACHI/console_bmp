@@ -2,6 +2,7 @@ add_executable(console_bmp
     src/main.cpp
     src/cli_args.cpp
     src/bmp_display.cpp
+    src/bmp_display_sfml.cpp
     src/get_terminal_size.cpp
 )
 target_include_directories(console_bmp PUBLIC include)

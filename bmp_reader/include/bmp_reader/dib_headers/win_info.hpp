@@ -47,6 +47,8 @@ struct WinInfo : public HeaderBase {
     virtual auto channels_count() const -> size_t;
 
     virtual auto actual_data_size(BmpFileInfo info) const -> size_t;
+
+    virtual void print_info() const;
 };
 
 

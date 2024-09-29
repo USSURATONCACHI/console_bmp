@@ -1,4 +1,5 @@
 #include <bmp_reader/dib_headers/win_info.hpp>
+#include <bmp_reader/util/print.hpp>
 
 #include <cmath>
 
@@ -48,6 +49,20 @@ auto WinInfo::channels_count() const -> size_t {
 }
 auto WinInfo::bits_per_channel() const -> size_t {
     return num_bits_per_pixel / channels_count();    
+}
+
+void WinInfo::print_info() const {
+    println("BITMAPINFOHEADAER[v1-v5]");
+    println("Image size: {} {}", width_pixels, height_pixels);
+    println("Bits per pixel: {}", num_bits_per_pixel);
+    println("Compression method: {}", dib_headers::CompressionMethod_to_string(compression_method));
+    println("Raw data size: {}", raw_data_size);
+    println("Num colors in palette: {}", num_colors_in_pallete);
+    println("Important colors: {}", num_important_colors);
+}
+
+auto WinInfo::get_bits_per_pixel() const -> size_t {
+    return num_bits_per_pixel;    
 }
 
 } // namespace dib_headers

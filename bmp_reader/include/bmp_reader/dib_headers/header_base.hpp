@@ -12,6 +12,7 @@ struct HeaderBase {
     virtual auto min_data_size() const -> size_t = 0;
     virtual auto get_bits_per_pixel() const -> size_t = 0;
     virtual auto channels_count() const -> size_t = 0;
+    virtual void print_info() const = 0;
 };
 
 } // namespace dib_headers

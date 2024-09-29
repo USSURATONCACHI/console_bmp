@@ -20,7 +20,7 @@ public:
     virtual void add_default_parsers();
 
     // Reading logic
-    virtual auto read_bmp(std::istream& is, bool show_info = false) -> images::Rgba8;
+    virtual auto read_bmp(std::istream& is, bool show_info = false) -> Rgba8Image;
 
     // Reading helpers
     virtual auto read_bmp_file_header(std::istream& is) -> BmpFileInfo;

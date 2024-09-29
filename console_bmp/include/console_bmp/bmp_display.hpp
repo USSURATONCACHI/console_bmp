@@ -2,8 +2,9 @@
 
 #include <string>
 #include <optional>
-#include <bmp_reader/images/rgba8.hpp>
 #include <tuple>
+
+#include <bmp_reader/rgba8_image.hpp>
 
 namespace console_bmp {
 
@@ -25,7 +26,7 @@ protected:
     std::tuple<uint64_t, uint64_t> sum_pixels(size_t start_x, size_t start_y, size_t end_x, size_t end_y);
 
 protected:
-    std::optional<bmp_reader::images::Rgba8> m_image;
+    std::optional<bmp_reader::Rgba8Image> m_image;
     bool m_show_info;
 };
 

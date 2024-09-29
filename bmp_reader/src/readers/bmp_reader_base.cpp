@@ -4,12 +4,16 @@
 namespace bmp_reader {
 namespace readers {
 
+BmpReaderBase::BmpReaderBase(BmpFileInfo file_info)
+    : m_file_info(file_info)
+{}
+
 auto BmpReaderBase::read_row_by_row(std::istream& is, ssize_t width, ssize_t height, PixelReaderBase& pixel_reader) -> Rgba8Image {
     const size_t abs_width = std::abs(width);
     const size_t abs_height = std::abs(height);
     is.seekg(m_file_info.pixel_array_offset);
 
-    std::vector<uint8_t> row_data((width + 1) * sizeof(Rgba8Pixel));
+    std::vector<uint8_t> row_data(get_bmp_header().data_row_size());
     std::vector<Rgba8Pixel> final_pixels(abs_width * abs_height);
 
     // Read

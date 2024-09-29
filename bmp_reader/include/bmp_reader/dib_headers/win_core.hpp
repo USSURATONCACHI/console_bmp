@@ -23,6 +23,7 @@ struct WinCore : public HeaderBase {
     virtual auto min_data_size() const -> size_t;
     virtual auto get_bits_per_pixel() const -> size_t;
     virtual auto channels_count() const -> size_t;
+    virtual void print_info() const;
 };
 
 
